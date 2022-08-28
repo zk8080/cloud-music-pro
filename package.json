@@ -47,7 +47,8 @@
     "typescript": "^4.6.4",
     "vite": "^3.0.7",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-stylelint": "^3.0.7"
+    "vite-plugin-stylelint": "^3.0.7",
+    "vite-plugin-svgr": "^2.2.1"
   },
   "lint-staged": {
     "**/*.{js,jsx,tsx,ts}": [
