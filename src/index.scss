@@ -1,6 +1,17 @@
+@import "~@semi-bot/semi-theme-doucreator/semi.min.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	button,
+	[type="button"],
+	[type="reset"],
+	[type="submit"] {
+		background-color: var(--semi-color-primary);
+	}
+}
 
 :root {
 	font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
@@ -50,15 +61,6 @@ button {
 	border: 1px solid transparent;
 	border-radius: 8px;
 	transition: border-color 0.25s;
-}
-
-button:hover {
-	border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

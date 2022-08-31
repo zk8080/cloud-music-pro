@@ -10,6 +10,7 @@ export default defineConfig({
 	plugins: [react(), viteEslint(), viteStylelint(), svgr()],
 	resolve: {
 		alias: {
+			"~@semi-bot": path.join(__dirname, "./node_modules/@semi-bot"),
 			"@assets": path.join(__dirname, "./src/assets")
 		}
 	}
