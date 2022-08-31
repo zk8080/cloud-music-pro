@@ -15,6 +15,7 @@ module.exports = {
   ],
   // 配置 rules
   rules: {
+    "selector-class-pattern": "^\.[a-z]+(?:-[-a-z]+)?(?:--[a-z]+)?$",
     "at-rule-no-unknown": [
       true,
       {

@@ -7,11 +7,12 @@ import svgr from "vite-plugin-svgr";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react(), viteEslint(), viteStylelint(), svgr()],
-	resolve: {
-		alias: {
-			"~@semi-bot": path.join(__dirname, "./node_modules/@semi-bot"),
-			"@assets": path.join(__dirname, "./src/assets")
-		}
-	}
+  plugins: [react(), viteEslint(), viteStylelint(), svgr()],
+  resolve: {
+    alias: {
+      "~@semi-bot": path.join(__dirname, "./node_modules/@semi-bot"),
+      "@assets": path.join(__dirname, "./src/assets"),
+      "@": path.join(__dirname, "./src")
+    }
+  }
 });
