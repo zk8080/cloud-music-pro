@@ -1,9 +1,13 @@
 import { IconMoon, IconPulse, IconSun } from "@douyinfe/semi-icons";
-import { Avatar, Nav } from "@douyinfe/semi-ui";
-import React, { StrictMode, useState } from "react";
+import { Avatar, Nav, Tooltip } from "@douyinfe/semi-ui";
+import { useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./index.scss";
 
 function NavBar() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
   const [themeMode, setThemeMode] = useState<"dark" | "light">("light");
 
   const switchMode = () => {
@@ -17,15 +21,20 @@ function NavBar() {
     }
   };
 
+  const selectKeys = useMemo(() => [pathname], [pathname]);
+
   return (
     <Nav
       mode={"horizontal"}
       className="cloud-layout--navbar px-24"
+      selectedKeys={selectKeys}
       items={[
-        { itemKey: "home", text: "首页" },
-        { itemKey: "category", text: "分类" }
+        { itemKey: "/", text: "首页" },
+        { itemKey: "/category", text: "分类" }
       ]}
-      onSelect={(key) => console.log(key)}
+      onClick={(item) => {
+        navigate(item.itemKey as string);
+      }}
       header={{
         logo: <IconPulse className="text-4xl" size="inherit" />,
         text: "❤️Music"
@@ -33,13 +42,21 @@ function NavBar() {
       footer={
         <div className="flex items-center">
           {themeMode === "dark" ? (
-            <IconSun className="text-4xl" size="inherit" onClick={switchMode} />
+            <Tooltip content="切换到亮色模式">
+              <IconSun
+                className="text-3xl"
+                size="inherit"
+                onClick={switchMode}
+              />
+            </Tooltip>
           ) : (
-            <IconMoon
-              className="text-4xl"
-              size="inherit"
-              onClick={switchMode}
-            />
+            <Tooltip content="切换到暗色模式">
+              <IconMoon
+                className="text-3xl"
+                size="inherit"
+                onClick={switchMode}
+              />
+            </Tooltip>
           )}
 
           <Avatar size="small" className="ml-3" color="red">
