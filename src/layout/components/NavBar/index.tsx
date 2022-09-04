@@ -26,7 +26,7 @@ function NavBar() {
   return (
     <Nav
       mode={"horizontal"}
-      className="cloud-layout--navbar px-24"
+      className="cloud-layout--navbar px-32"
       selectedKeys={selectKeys}
       items={[
         { itemKey: "/", text: "首页" },
@@ -43,19 +43,11 @@ function NavBar() {
         <div className="flex items-center">
           {themeMode === "dark" ? (
             <Tooltip content="切换到亮色模式">
-              <IconSun
-                className="text-3xl"
-                size="inherit"
-                onClick={switchMode}
-              />
+              <IconSun className="text-3xl" size="inherit" onClick={switchMode} />
             </Tooltip>
           ) : (
             <Tooltip content="切换到暗色模式">
-              <IconMoon
-                className="text-3xl"
-                size="inherit"
-                onClick={switchMode}
-              />
+              <IconMoon className="text-3xl" size="inherit" onClick={switchMode} />
             </Tooltip>
           )}
 

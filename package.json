@@ -17,6 +17,7 @@
     "@douyinfe/semi-illustrations": "^2.18.2",
     "@douyinfe/semi-ui": "^2.18.0",
     "@semi-bot/semi-theme-doucreator": "^1.0.18",
+    "axios": "^0.27.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0"
