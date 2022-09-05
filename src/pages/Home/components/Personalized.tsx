@@ -21,7 +21,7 @@ function Personalized() {
   }, []);
 
   return (
-    <div>
+    <>
       <Title heading={2} ellipsis={{ showTooltip: true }} className="flex items-center justify-center my-5">
         热门推荐
       </Title>
@@ -30,10 +30,10 @@ function Personalized() {
           className="w-full h-80"
           speed={1000}
           animation="fade"
-          theme="dark"
           showIndicator={false}
           autoPlay={false}
           arrowType="hover"
+          theme="dark"
         >
           {personalizedList.map((item, index) => {
             return (
@@ -41,7 +41,7 @@ function Personalized() {
                 {item.map((childItem) => {
                   const { id, picUrl, name } = childItem || {};
                   return (
-                    <Card key={id} className="w-56" cover={<img alt="example" src={picUrl} />}>
+                    <Card key={id} className="w-56" shadows="hover" cover={<img alt="example" src={picUrl} />}>
                       <Title heading={5} ellipsis={{ showTooltip: true }}>
                         {name}
                       </Title>
@@ -53,7 +53,7 @@ function Personalized() {
           })}
         </Carousel>
       )}
-    </div>
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import { BannerRes, PersonalizedRes } from "./../types/home";
+import { BannerRes, PersonalizedNewSongRes, PersonalizedRes } from "./../types/home";
 import { http } from "./request";
 
 // 获取PC轮播图
@@ -17,7 +17,7 @@ export const getPersonalized = async (params: { limit?: number }) => {
 
 // 获取推荐新歌单
 export const getPersonalizedNewSong = async (params: { limit?: number }) => {
-  return await http.get<PersonalizedRes>("/personalized/newsong", {
+  return await http.get<PersonalizedNewSongRes>("/personalized/newsong", {
     params
   });
 };

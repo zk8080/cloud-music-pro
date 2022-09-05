@@ -2,4 +2,10 @@
   h2.semi-typography {
     margin: 20px 0 5px;
   }
+
+  .semi-carousel {
+    .semi-carousel-content-slide .semi-carousel-content-item-slide-in {
+      display: flex;
+    }
+  }
 }

@@ -17,7 +17,13 @@ function App() {
                 key={path}
                 path={path}
                 element={
-                  <Suspense fallback={<Spin />}>
+                  <Suspense
+                    fallback={
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Spin size="large" />
+                      </div>
+                    }
+                  >
                     <route.component />
                   </Suspense>
                 }
@@ -29,7 +35,13 @@ function App() {
                       key={path}
                       path={path}
                       element={
-                        <Suspense fallback={<Spin />}>
+                        <Suspense
+                          fallback={
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Spin size="large" />
+                            </div>
+                          }
+                        >
                           <childRoute.component />
                         </Suspense>
                       }
