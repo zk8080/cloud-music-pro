@@ -262,3 +262,121 @@ export interface FreeTrialPrivilege {
   userConsumable?: boolean;
   listenType?: null;
 }
+
+export interface HotTagRes {
+  tags?: Tag[];
+  code?: number;
+}
+
+export interface Tag {
+  playlistTag?: PlaylistTag;
+  activity?: boolean;
+  createTime?: number;
+  usedCount?: number;
+  hot?: boolean;
+  position?: number;
+  category?: number;
+  name?: string;
+  id?: number;
+  type?: number;
+}
+
+export interface PlaylistTag {
+  id?: number;
+  name?: string;
+  category?: number;
+  usedCount?: number;
+  type?: number;
+  position?: number;
+  createTime?: number;
+  highQuality?: number;
+  highQualityPos?: number;
+  officialPos?: number;
+}
+
+export interface PlaylistRes {
+  playlists?: Playlist[];
+  code?: number;
+  more?: boolean;
+  lasttime?: number;
+  total?: number;
+}
+
+export interface Playlist {
+  name?: string;
+  id?: number;
+  trackNumberUpdateTime?: number;
+  status?: number;
+  userId?: number;
+  createTime?: number;
+  updateTime?: number;
+  subscribedCount?: number;
+  trackCount?: number;
+  cloudTrackCount?: number;
+  coverImgUrl?: string;
+  coverImgId?: number;
+  description?: string;
+  tags?: string[];
+  playCount?: number;
+  trackUpdateTime?: number;
+  specialType?: number;
+  totalDuration?: number;
+  creator?: Creator;
+  tracks?: null;
+  subscribers?: Creator[];
+  subscribed?: null;
+  commentThreadId?: string;
+  newImported?: boolean;
+  adType?: number;
+  highQuality?: boolean;
+  privacy?: number;
+  ordered?: boolean;
+  anonimous?: boolean;
+  coverStatus?: number;
+  recommendInfo?: null;
+  shareCount?: number;
+  coverImgId_str?: string;
+  commentCount?: number;
+  copywriter?: string;
+  tag?: string;
+}
+
+export interface Creator {
+  defaultAvatar?: boolean;
+  province?: number;
+  authStatus?: number;
+  followed?: boolean;
+  avatarUrl?: string;
+  accountStatus?: number;
+  gender?: number;
+  city?: number;
+  birthday?: number;
+  userId?: number;
+  userType?: number;
+  nickname?: string;
+  signature?: string;
+  description?: string;
+  detailDescription?: string;
+  avatarImgId?: number;
+  backgroundImgId?: number;
+  backgroundUrl?: string;
+  authority?: number;
+  mutual?: boolean;
+  expertTags?: string[] | null;
+  experts?: null;
+  djStatus?: number;
+  vipType?: number;
+  remarkName?: null;
+  authenticationTypes?: number;
+  avatarDetail?: AvatarDetail | null;
+  backgroundImgIdStr?: string;
+  avatarImgIdStr?: string;
+  anchor?: boolean;
+  avatarImgId_str?: string;
+}
+
+export interface AvatarDetail {
+  userType?: number;
+  identityLevel?: number;
+  identityIconUrl?: string;
+}

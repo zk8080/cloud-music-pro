@@ -15,6 +15,7 @@ specifiers:
   '@vitejs/plugin-react': ^2.0.1
   autoprefixer: ^10.4.8
   axios: ^0.27.2
+  classnames: ^2.3.1
   commitlint: ^17.1.1
   eslint: ^8.23.0
   eslint-config-prettier: ^8.5.0
@@ -48,6 +49,7 @@ dependencies:
   '@douyinfe/semi-ui': registry.npmmirror.com/@douyinfe/semi-ui/2.18.0_biqbaboplfbrettd7655fr4n2y
   '@semi-bot/semi-theme-doucreator': registry.npmmirror.com/@semi-bot/semi-theme-doucreator/1.0.18
   axios: registry.npmmirror.com/axios/0.27.2
+  classnames: registry.npmmirror.com/classnames/2.3.1
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-router-dom: registry.npmmirror.com/react-router-dom/6.3.0_biqbaboplfbrettd7655fr4n2y
