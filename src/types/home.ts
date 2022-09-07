@@ -91,6 +91,7 @@ export interface Song {
   disc?: Disc;
   no?: number;
   artists?: Artist[];
+  ar?: Artist[];
   album?: Album;
   starred?: boolean;
   popularity?: number;
@@ -243,20 +244,6 @@ export interface ChargeInfoList {
   chargeType?: number;
 }
 
-export enum DLLevel {
-  None = "none"
-}
-
-export enum MaxBrLevel {
-  Exhigh = "exhigh",
-  Hires = "hires",
-  Lossless = "lossless"
-}
-
-export enum LLevel {
-  Standard = "standard"
-}
-
 export interface FreeTrialPrivilege {
   resConsumable?: boolean;
   userConsumable?: boolean;
@@ -322,7 +309,7 @@ export interface Playlist {
   specialType?: number;
   totalDuration?: number;
   creator?: Creator;
-  tracks?: null;
+  tracks?: Track[];
   subscribers?: Creator[];
   subscribed?: null;
   commentThreadId?: string;
@@ -339,6 +326,7 @@ export interface Playlist {
   commentCount?: number;
   copywriter?: string;
   tag?: string;
+  trackIds?: TrackID[];
 }
 
 export interface Creator {
@@ -379,4 +367,192 @@ export interface AvatarDetail {
   userType?: number;
   identityLevel?: number;
   identityIconUrl?: string;
+}
+
+export interface ToplistRes {
+  code?: number;
+  list?: List[];
+  artistToplist?: ArtistToplist;
+}
+
+export interface ArtistToplist {
+  coverUrl?: string;
+  name?: string;
+  upateFrequency?: string;
+  position?: number;
+  updateFrequency?: string;
+}
+
+export interface List {
+  subscribers?: any[];
+  subscribed?: null;
+  creator?: null;
+  artists?: null;
+  tracks?: Track[];
+  updateFrequency?: string;
+  backgroundCoverId?: number;
+  backgroundCoverUrl?: null;
+  titleImage?: number;
+  titleImageUrl?: null;
+  englishTitle?: null;
+  opRecommend?: boolean;
+  recommendInfo?: null;
+  userId?: number;
+  adType?: number;
+  trackNumberUpdateTime?: number;
+  highQuality?: boolean;
+  createTime?: number;
+  specialType?: number;
+  newImported?: boolean;
+  updateTime?: number;
+  trackCount?: number;
+  anonimous?: boolean;
+  commentThreadId?: string;
+  coverImgId?: number;
+  coverImgUrl?: string;
+  totalDuration?: number;
+  trackUpdateTime?: number;
+  privacy?: number;
+  playCount?: number;
+  subscribedCount?: number;
+  cloudTrackCount?: number;
+  ordered?: boolean;
+  tags?: string[];
+  description?: null | string;
+  status?: number;
+  name?: string;
+  id?: number;
+  coverImgId_str?: string;
+  ToplistType?: string;
+}
+
+export interface TrackID {
+  id?: number;
+  v?: number;
+  t?: number;
+  at?: number;
+  alg?: null;
+  uid?: number;
+  rcmdReason?: string;
+  sc?: null;
+  lr?: number;
+  ratio?: number;
+}
+
+export interface Track {
+  name?: string;
+  id?: number;
+  pst?: number;
+  t?: number;
+  ar?: Ar[];
+  alia?: string[];
+  pop?: number;
+  st?: number;
+  rt?: Rt | null;
+  fee?: number;
+  v?: number;
+  crbt?: null;
+  cf?: string;
+  al?: Al;
+  dt?: number;
+  h?: H;
+  m?: H;
+  l?: H;
+  sq?: H | null;
+  hr?: H | null;
+  a?: null;
+  cd?: string;
+  no?: number;
+  rtUrl?: null;
+  ftype?: number;
+  rtUrls?: any[];
+  djId?: number;
+  copyright?: number;
+  s_id?: number;
+  mark?: number;
+  originCoverType?: number;
+  originSongSimpleData?: OriginSongSimpleData | null;
+  tagPicList?: null;
+  resourceState?: boolean;
+  version?: number;
+  songJumpInfo?: null;
+  entertainmentTags?: null;
+  single?: number;
+  noCopyrightRcmd?: null;
+  rtype?: number;
+  rurl?: null;
+  mst?: number;
+  cp?: number;
+  mv?: number;
+  publishTime?: number;
+  tns?: string[];
+}
+
+export interface Al {
+  id?: number;
+  name?: string;
+  picUrl?: string;
+  tns?: string[];
+  pic_str?: string;
+  pic?: number;
+}
+
+export interface Ar {
+  id?: number;
+  name?: string;
+  tns?: any[];
+  alias?: any[];
+}
+
+export interface H {
+  br?: number;
+  fid?: number;
+  size?: number;
+  vd?: number;
+  sr?: number;
+}
+
+export interface OriginSongSimpleData {
+  songId?: number;
+  name?: string;
+  artists?: AlbumMeta[];
+  albumMeta?: AlbumMeta;
+}
+
+export interface AlbumMeta {
+  id?: number;
+  name?: string;
+}
+
+export enum Rt {
+  Empty = "",
+  The600902000007952625 = "600902000007952625",
+  The600902000008882893 = "600902000008882893",
+  The600902000008893619 = "600902000008893619",
+  The600902000009535428 = "600902000009535428",
+  The600907000001520578 = "600907000001520578"
+}
+
+export enum DLLevel {
+  Hires = "hires",
+  Lossless = "lossless",
+  None = "none"
+}
+
+export enum MaxBrLevel {
+  Exhigh = "exhigh",
+  Hires = "hires",
+  Lossless = "lossless"
+}
+
+export enum LLevel {
+  Exhigh = "exhigh",
+  None = "none",
+  Standard = "standard"
+}
+
+export interface PlaylistDetailRes {
+  songs?: Song[];
+  privileges?: Privilege[];
+  code?: number;
 }

@@ -46,7 +46,9 @@ function Personalized() {
             return (
               <div
                 key={item.id}
-                className={classNames("tag-item mx-4 cursor-pointer", { active: curTag === item.name })}
+                className={classNames("tag-item mx-4 cursor-pointer hover:text-primary", {
+                  active: curTag === item.name
+                })}
                 onClick={async () => {
                   await getList(item.name);
                   setCurTag(item.name || "全部");

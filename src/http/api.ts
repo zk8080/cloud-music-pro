@@ -1,4 +1,12 @@
-import { BannerRes, HotTagRes, PersonalizedNewSongRes, PersonalizedRes, PlaylistRes } from "./../types/home";
+import {
+  BannerRes,
+  HotTagRes,
+  PersonalizedNewSongRes,
+  PersonalizedRes,
+  PlaylistDetailRes,
+  PlaylistRes,
+  ToplistRes
+} from "./../types/home";
 import { http } from "./request";
 
 // 获取PC轮播图
@@ -30,4 +38,14 @@ export const getHotTag = async () => {
 // 获取精品歌单列表
 export const getPlaylistByTag = async (params: { limit?: number; cat?: string }) => {
   return await http.get<PlaylistRes>("/top/playlist/highquality", { params });
+};
+
+// 获取所有榜单列表
+export const getToplist = async () => {
+  return await http.get<ToplistRes>("/toplist");
+};
+
+// 获取歌单详情
+export const getPlaylistTrackList = async (params: { id: number; limit?: number }) => {
+  return await http.get<PlaylistDetailRes>("/playlist/track/all", { params });
 };

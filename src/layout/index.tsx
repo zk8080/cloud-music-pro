@@ -9,8 +9,8 @@ const { Header, Footer, Content } = Layout;
 
 function MyLayout() {
   return (
-    <Layout className="cloud-music--layout">
-      <Header>
+    <Layout className="cloud-music--layout pt-[60px]">
+      <Header className="fixed top-0 z-50 w-full shadow-md">
         <NavBar />
       </Header>
       <Content>

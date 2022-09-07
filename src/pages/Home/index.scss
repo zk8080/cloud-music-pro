@@ -12,4 +12,10 @@
   .tag-item.active {
     color: var(--semi-color-primary);
   }
+
+  .top-detail--item {
+    .semi-typography {
+      color: var(--semi-color-white);
+    }
+  }
 }
