@@ -4,6 +4,7 @@ import { chunk } from "@/utils";
 import { Card, Carousel, Typography } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
 import classNames from "classnames";
+import Image from "@/components/Image";
 
 const { Title } = Typography;
 
@@ -79,7 +80,13 @@ function Personalized() {
                   {item.map((childItem) => {
                     const { id, coverImgUrl, name } = childItem || {};
                     return (
-                      <Card key={id} className="w-56" shadows="hover" cover={<img alt="example" src={coverImgUrl} />}>
+                      <Card
+                        key={id}
+                        className="w-56"
+                        shadows="always"
+                        bordered={false}
+                        cover={<Image src={coverImgUrl} />}
+                      >
                         <Title heading={5} ellipsis={{ showTooltip: true }}>
                           {name}
                         </Title>

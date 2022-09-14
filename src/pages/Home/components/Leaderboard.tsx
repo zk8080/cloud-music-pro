@@ -55,7 +55,7 @@ function Leaderboard() {
         {topList.map((item) => {
           return (
             <div
-              className="flex flex-col w-24/100 h-112 py-4 hover:shadow-2xl rounded-md"
+              className="flex flex-col w-24/100 h-112 py-4 shadow-2xl rounded-md"
               key={item.id}
               style={{
                 backgroundImage: `url(${item.coverImgUrl}?imageView&param=100y100&blur=40x20)`

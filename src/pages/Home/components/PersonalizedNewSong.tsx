@@ -3,6 +3,7 @@ import { PersonalizedNewSongItem } from "@/types/home";
 import { chunk } from "@/utils";
 import { Card, Carousel, Typography } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
+import Image from "@/components/Image";
 
 const { Title, Text } = Typography;
 
@@ -48,7 +49,7 @@ function PersonalizedNewSong() {
                     }
                   } = childItem || {};
                   return (
-                    <Card key={id} className="w-56" shadows="hover" cover={<img alt="example" src={picUrl} />}>
+                    <Card key={id} className="w-56" shadows="always" bordered={false} cover={<Image src={picUrl} />}>
                       <Title heading={6} ellipsis={{ showTooltip: true }}>
                         {name}
                       </Title>
