@@ -1,3 +1,4 @@
+import { CategoryListRes } from "./../types/category";
 import {
   BannerRes,
   HotTagRes,
@@ -48,4 +49,9 @@ export const getToplist = async () => {
 // 获取歌单详情
 export const getPlaylistTrackList = async (params: { id: number; limit?: number }) => {
   return await http.get<PlaylistDetailRes>("/playlist/track/all", { params });
+};
+
+// 获取歌单分类
+export const getCategoryList = async () => {
+  return await http.get<CategoryListRes>("/playlist/catlist");
 };

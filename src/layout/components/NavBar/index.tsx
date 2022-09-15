@@ -30,7 +30,7 @@ function NavBar() {
       selectedKeys={selectKeys}
       items={[
         { itemKey: "/", text: "首页" },
-        { itemKey: "/category", text: "分类" }
+        { itemKey: "/category", text: "歌单" }
       ]}
       onClick={(item) => {
         navigate(item.itemKey as string);

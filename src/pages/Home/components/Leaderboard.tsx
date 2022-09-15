@@ -26,7 +26,6 @@ function Leaderboard() {
       }
     });
     setTopDetailMap(tmpMap);
-    console.log(res, "---res--");
   };
 
   useEffect(() => {
