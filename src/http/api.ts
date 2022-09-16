@@ -37,7 +37,7 @@ export const getHotTag = async () => {
 };
 
 // 获取精品歌单列表
-export const getPlaylistByTag = async (params: { limit?: number; cat?: string }) => {
+export const getHighqualityPlaylistByTag = async (params: { limit?: number; cat?: string }) => {
   return await http.get<PlaylistRes>("/top/playlist/highquality", { params });
 };
 
@@ -54,4 +54,9 @@ export const getPlaylistTrackList = async (params: { id: number; limit?: number 
 // 获取歌单分类
 export const getCategoryList = async () => {
   return await http.get<CategoryListRes>("/playlist/catlist");
+};
+
+// 根据分类获取歌单列表
+export const getPlaylistByTag = async (params: { limit?: number; cat?: string; offset?: number; order?: string }) => {
+  return await http.get<PlaylistRes>("/top/playlist", { params });
 };

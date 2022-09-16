@@ -287,6 +287,7 @@ export interface PlaylistRes {
   more?: boolean;
   lasttime?: number;
   total?: number;
+  cat?: string;
 }
 
 export interface Playlist {

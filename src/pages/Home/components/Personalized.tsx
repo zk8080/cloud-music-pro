@@ -1,10 +1,11 @@
-import { getHotTag, getPlaylistByTag } from "@/http/api";
+import { getHotTag, getHighqualityPlaylistByTag } from "@/http/api";
 import { Playlist, Tag } from "@/types/home";
 import { chunk } from "@/utils";
 import { Card, Carousel, Typography } from "@douyinfe/semi-ui";
 import { useEffect, useState } from "react";
 import classNames from "classnames";
-import Image from "@/components/Image";
+import Image from "@/components/CoverImage";
+import SongCard from "@/components/SongCard";
 
 const { Title } = Typography;
 
@@ -14,7 +15,7 @@ function Personalized() {
   const [personalizedList, setPersonalizedList] = useState<Playlist[][]>([]); // 歌单列表
 
   const getList = async (tag = "全部") => {
-    const res = await getPlaylistByTag({ limit: 20, cat: tag });
+    const res = await getHighqualityPlaylistByTag({ limit: 20, cat: tag });
     if (res.code === 200) {
       const newList = chunk(res.playlists || [], 5);
       setPersonalizedList(newList || []);
@@ -79,19 +80,7 @@ function Personalized() {
                 <div key={`${curTag}${index}`} className="px-32 flex items-center justify-between">
                   {item.map((childItem) => {
                     const { id, coverImgUrl, name } = childItem || {};
-                    return (
-                      <Card
-                        key={id}
-                        className="w-56"
-                        shadows="always"
-                        bordered={false}
-                        cover={<Image src={coverImgUrl} />}
-                      >
-                        <Title heading={5} ellipsis={{ showTooltip: true }}>
-                          {name}
-                        </Title>
-                      </Card>
-                    );
+                    return <SongCard key={id} coverImgUrl={coverImgUrl} songName={name} />;
                   })}
                 </div>
               );
