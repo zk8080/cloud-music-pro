@@ -23,7 +23,6 @@ function Category() {
       if (code === 200) {
         const tmpList = Object.entries(categories)?.map(([key, val]) => {
           const list = sub?.filter((item) => item.category === Number(key));
-          console.log(list);
           return {
             code: key,
             name: val,
