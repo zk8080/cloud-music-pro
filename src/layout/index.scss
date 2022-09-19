@@ -17,4 +17,8 @@
     background-color: var(--semi-color-primary);
     border-radius: 50%;
   }
+
+  .semi-spin-wrapper {
+    @apply flex flex-col items-center justify-center fixed;
+  }
 }

@@ -1,78 +1,117 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { routes } from "@/router/index";
 import { Suspense, lazy } from "react";
-import { Spin } from "@douyinfe/semi-ui";
+import { Button, Empty, Spin } from "@douyinfe/semi-ui";
+import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ErrorBoundary } from "react-error-boundary";
+import { IllustrationConstruction, IllustrationConstructionDark } from "@douyinfe/semi-illustrations";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0
+      // suspense: true
+    }
+  }
+});
 
 const NotFountPage = lazy(() => import("./pages/404/index"));
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {routes.map((route) => {
-          const { path, children } = route;
-          if (children?.length > 0) {
-            return (
-              <Route
-                key={path}
-                path={path}
-                element={
-                  <Suspense
-                    fallback={
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Spin size="large" />
-                      </div>
-                    }
-                  >
-                    <route.component />
-                  </Suspense>
-                }
+    <QueryClientProvider client={queryClient}>
+      <QueryErrorResetBoundary>
+        {({ reset }) => (
+          <ErrorBoundary
+            onReset={reset}
+            fallbackRender={({ resetErrorBoundary, error }) => (
+              <Empty
+                image={<IllustrationConstruction style={{ width: 150, height: 150 }} />}
+                darkModeImage={<IllustrationConstructionDark style={{ width: 150, height: 150 }} />}
+                title={"页面发生错误"}
+                description={error.message}
               >
-                {children.map((childRoute) => {
-                  const { path } = childRoute;
+                <div className="w-full flex items-center justify-center">
+                  <Button theme="solid" type="primary" onClick={resetErrorBoundary}>
+                    重新加载
+                  </Button>
+                </div>
+              </Empty>
+            )}
+          >
+            <BrowserRouter>
+              <Routes>
+                {routes.map((route) => {
+                  const { path, children } = route;
+                  if (children?.length > 0) {
+                    return (
+                      <Route
+                        key={path}
+                        path={path}
+                        element={
+                          <Suspense
+                            fallback={
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Spin size="large" />
+                              </div>
+                            }
+                          >
+                            <route.component />
+                          </Suspense>
+                        }
+                      >
+                        {children.map((childRoute) => {
+                          const { path } = childRoute;
+                          return (
+                            <Route
+                              key={path}
+                              path={path}
+                              element={
+                                <Suspense
+                                  fallback={
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <Spin size="large" />
+                                    </div>
+                                  }
+                                >
+                                  <childRoute.component />
+                                </Suspense>
+                              }
+                            />
+                          );
+                        })}
+                      </Route>
+                    );
+                  }
                   return (
                     <Route
                       key={path}
                       path={path}
                       element={
-                        <Suspense
-                          fallback={
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Spin size="large" />
-                            </div>
-                          }
-                        >
-                          <childRoute.component />
+                        <Suspense fallback={<Spin />}>
+                          <route.component />
                         </Suspense>
                       }
                     />
                   );
                 })}
-              </Route>
-            );
-          }
-          return (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <Suspense fallback={<Spin />}>
-                  <route.component />
-                </Suspense>
-              }
-            />
-          );
-        })}
-        <Route
-          path="*"
-          element={
-            <Suspense fallback={<Spin />}>
-              <NotFountPage />
-            </Suspense>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+                <Route
+                  path="*"
+                  element={
+                    <Suspense fallback={<Spin />}>
+                      <NotFountPage />
+                    </Suspense>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </ErrorBoundary>
+        )}
+      </QueryErrorResetBoundary>
+
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

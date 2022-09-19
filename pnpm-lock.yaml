@@ -7,12 +7,15 @@ specifiers:
   '@douyinfe/semi-illustrations': ^2.18.2
   '@douyinfe/semi-ui': ^2.18.0
   '@semi-bot/semi-theme-doucreator': ^1.0.18
+  '@tanstack/react-query': ^4.3.7
+  '@tanstack/react-query-devtools': ^4.3.9
   '@types/node': ^18.7.13
   '@types/react': ^18.0.17
   '@types/react-dom': ^18.0.6
   '@typescript-eslint/eslint-plugin': ^5.35.1
   '@typescript-eslint/parser': ^5.35.1
   '@vitejs/plugin-react': ^2.0.1
+  add: ^2.0.6
   autoprefixer: ^10.4.8
   axios: ^0.27.2
   classnames: ^2.3.1
@@ -27,6 +30,7 @@ specifiers:
   prettier: ^2.7.1
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-error-boundary: ^3.1.4
   react-router-dom: ^6.3.0
   sass: ^1.54.5
   stylelint: ^14.11.0
@@ -48,10 +52,14 @@ dependencies:
   '@douyinfe/semi-illustrations': registry.npmmirror.com/@douyinfe/semi-illustrations/2.18.2_react@18.2.0
   '@douyinfe/semi-ui': registry.npmmirror.com/@douyinfe/semi-ui/2.18.0_biqbaboplfbrettd7655fr4n2y
   '@semi-bot/semi-theme-doucreator': registry.npmmirror.com/@semi-bot/semi-theme-doucreator/1.0.18
+  '@tanstack/react-query': registry.npmmirror.com/@tanstack/react-query/4.3.7_biqbaboplfbrettd7655fr4n2y
+  '@tanstack/react-query-devtools': registry.npmmirror.com/@tanstack/react-query-devtools/4.3.9_goa67veto3wfyxdyodtcvenndm
+  add: registry.npmmirror.com/add/2.0.6
   axios: registry.npmmirror.com/axios/0.27.2
   classnames: registry.npmmirror.com/classnames/2.3.1
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+  react-error-boundary: registry.npmmirror.com/react-error-boundary/3.1.4_react@18.2.0
   react-router-dom: registry.npmmirror.com/react-router-dom/6.3.0_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
@@ -1114,6 +1122,59 @@ packages:
       - supports-color
     dev: true
 
+  registry.npmmirror.com/@tanstack/match-sorter-utils/8.1.1:
+    resolution: {integrity: sha512-IdmEekEYxQsoLOR0XQyw3jD1GujBpRRYaGJYQUw1eOT1eUugWxdc7jomh1VQ1EKHcdwDLpLaCz/8y4KraU4T9A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.1.1.tgz}
+    name: '@tanstack/match-sorter-utils'
+    version: 8.1.1
+    engines: {node: '>=12'}
+    dependencies:
+      remove-accents: registry.npmmirror.com/remove-accents/0.4.2
+    dev: false
+
+  registry.npmmirror.com/@tanstack/query-core/4.3.7:
+    resolution: {integrity: sha512-lCoAYhcx8i/o4lCQa06kbg5zqtnRnXp0tOYIm7NcSh6M9QLUcKO6UPoS+T9XwteLYnKcGHa3j3MGnin18fSPHA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@tanstack/query-core/-/query-core-4.3.7.tgz}
+    name: '@tanstack/query-core'
+    version: 4.3.7
+    dev: false
+
+  registry.npmmirror.com/@tanstack/react-query-devtools/4.3.9_goa67veto3wfyxdyodtcvenndm:
+    resolution: {integrity: sha512-N+nMBwrxAYsC5oEmexCuo4OZqBpR97pfy8r8tuvekFNYlA0pYlCnsxiqkZoZzF6ewk7w8KPkkDhClx0kSlW3qw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@tanstack/react-query-devtools/-/react-query-devtools-4.3.9.tgz}
+    id: registry.npmmirror.com/@tanstack/react-query-devtools/4.3.9
+    name: '@tanstack/react-query-devtools'
+    version: 4.3.9
+    peerDependencies:
+      '@tanstack/react-query': 4.3.9
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/match-sorter-utils': registry.npmmirror.com/@tanstack/match-sorter-utils/8.1.1
+      '@tanstack/react-query': registry.npmmirror.com/@tanstack/react-query/4.3.7_biqbaboplfbrettd7655fr4n2y
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+      use-sync-external-store: registry.npmmirror.com/use-sync-external-store/1.2.0_react@18.2.0
+    dev: false
+
+  registry.npmmirror.com/@tanstack/react-query/4.3.7_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-aoJs8WXHUILQyEjFwNxDfV9smOTD2kBYeXnN2e7UCQqSfL0k5ZqDK9+zQG8vxiC9ZDBnC3xuoSQG24lYIfiOzA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@tanstack/react-query/-/react-query-4.3.7.tgz}
+    id: registry.npmmirror.com/@tanstack/react-query/4.3.7
+    name: '@tanstack/react-query'
+    version: 4.3.7
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': registry.npmmirror.com/@tanstack/query-core/4.3.7
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+      use-sync-external-store: registry.npmmirror.com/use-sync-external-store/1.2.0_react@18.2.0
+    dev: false
+
   registry.npmmirror.com/@tsconfig/node10/1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@tsconfig/node10/-/node10-1.0.9.tgz}
     name: '@tsconfig/node10'
@@ -1447,6 +1508,12 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  registry.npmmirror.com/add/2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/add/-/add-2.0.6.tgz}
+    name: add
+    version: 2.0.6
+    dev: false
 
   registry.npmmirror.com/aggregate-error/3.1.0:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/aggregate-error/-/aggregate-error-3.1.0.tgz}
@@ -4552,6 +4619,19 @@ packages:
       react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
     dev: false
 
+  registry.npmmirror.com/react-error-boundary/3.1.4_react@18.2.0:
+    resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-error-boundary/-/react-error-boundary-3.1.4.tgz}
+    id: registry.npmmirror.com/react-error-boundary/3.1.4
+    name: react-error-boundary
+    version: 3.1.4
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.18.9
+      react: registry.npmmirror.com/react/18.2.0
+    dev: false
+
   registry.npmmirror.com/react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-is/-/react-is-16.13.1.tgz}
     name: react-is
@@ -4731,6 +4811,12 @@ packages:
     version: 3.2.0
     engines: {node: '>=8'}
     dev: true
+
+  registry.npmmirror.com/remove-accents/0.4.2:
+    resolution: {integrity: sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/remove-accents/-/remove-accents-0.4.2.tgz}
+    name: remove-accents
+    version: 0.4.2
+    dev: false
 
   registry.npmmirror.com/require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/require-directory/-/require-directory-2.1.1.tgz}
@@ -5658,6 +5744,17 @@ packages:
     dependencies:
       punycode: registry.npmmirror.com/punycode/2.1.1
     dev: true
+
+  registry.npmmirror.com/use-sync-external-store/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz}
+    id: registry.npmmirror.com/use-sync-external-store/1.2.0
+    name: use-sync-external-store
+    version: 1.2.0
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: registry.npmmirror.com/react/18.2.0
+    dev: false
 
   registry.npmmirror.com/util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz}

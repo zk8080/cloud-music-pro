@@ -1,26 +1,16 @@
 import { getBanner } from "@/http/api";
 import { Carousel } from "@douyinfe/semi-ui";
-import { useEffect, useState } from "react";
-import { BannerItem } from "@/types/home";
+import { useQuery } from "@tanstack/react-query";
 
 const Banner = () => {
-  const [bannerList, setBannerList] = useState<BannerItem[]>([]);
-
-  useEffect(() => {
-    const getBannerList = async () => {
-      const res = await getBanner();
-      if (res.code === 200) {
-        setBannerList(res.banners);
-      }
-    };
-    getBannerList();
-  }, []);
+  const { data } = useQuery(["banner"], getBanner);
+  const { banners = [] } = data || {};
 
   return (
     <>
-      {bannerList.length > 0 && (
+      {banners?.length > 0 && (
         <Carousel className="w-full h-96" speed={1000} animation="fade" autoPlay={false} arrowType="hover">
-          {bannerList.map((item, index) => {
+          {banners?.map((item, index) => {
             return (
               <div
                 key={index}

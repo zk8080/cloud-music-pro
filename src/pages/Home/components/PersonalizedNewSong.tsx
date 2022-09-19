@@ -1,26 +1,24 @@
 import { getPersonalizedNewSong } from "@/http/api";
-import { PersonalizedNewSongItem } from "@/types/home";
 import { chunk } from "@/utils";
-import { Card, Carousel, Typography } from "@douyinfe/semi-ui";
-import { useEffect, useState } from "react";
-import Image from "@/components/CoverImage";
+import { Carousel, Typography } from "@douyinfe/semi-ui";
 import SongCard from "@/components/SongCard";
+import { useQuery } from "@tanstack/react-query";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 function PersonalizedNewSong() {
-  const [personalizedList, setPersonalizedList] = useState<PersonalizedNewSongItem[][]>([]);
-
-  useEffect(() => {
-    const getList = async () => {
-      const res = await getPersonalizedNewSong({ limit: 20 });
-      if (res.code === 200) {
-        const newList = chunk(res.result || [], 5);
-        setPersonalizedList(newList || []);
+  const { data: personalizedList = [] } = useQuery(
+    ["PersonalizedNewSong"],
+    () => getPersonalizedNewSong({ limit: 20 }),
+    {
+      select: (res) => {
+        if (res.code === 200) {
+          return chunk(res.result || [], 5);
+        }
+        return [];
       }
-    };
-    getList();
-  }, []);
+    }
+  );
 
   return (
     <>

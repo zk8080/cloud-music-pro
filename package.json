@@ -17,10 +17,14 @@
     "@douyinfe/semi-illustrations": "^2.18.2",
     "@douyinfe/semi-ui": "^2.18.0",
     "@semi-bot/semi-theme-doucreator": "^1.0.18",
+    "@tanstack/react-query": "^4.3.7",
+    "@tanstack/react-query-devtools": "^4.3.9",
+    "add": "^2.0.6",
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
     "react-router-dom": "^6.3.0"
   },
   "devDependencies": {

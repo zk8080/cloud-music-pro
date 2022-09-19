@@ -68,13 +68,25 @@ function RequestBuilder(config: RequestConfig) {
       console.log("全局响应拦截器");
       // 关闭loading
       hideLoading();
+      const { code, msg } = response?.data || {};
+      if (code !== 200) {
+        // 处理错误情况
+        return Promise.reject({
+          code,
+          message: msg
+        });
+      }
       // 返回值为res.data，即后端接口返回的数据，减少解构的层级，以及统一响应数据格式。
       return response.data;
     },
     (err: any) => {
       // 关闭loading
       hideLoading();
-      return err;
+      const { code, message } = err || {};
+      return Promise.reject({
+        code,
+        message
+      });
     }
   );
 

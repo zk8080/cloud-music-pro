@@ -1,17 +1,18 @@
 import { getPlaylistTrackList, getToplist } from "@/http/api";
-import { List, Playlist, Song } from "@/types/home";
+import { List, Song } from "@/types/home";
 import { Typography } from "@douyinfe/semi-ui";
+import { useQuery } from "@tanstack/react-query";
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
 
 const { Title, Text } = Typography;
 
 function Leaderboard() {
-  const [topList, setTopList] = useState<List[]>([]);
-  const [topDetailMap, setTopDetailMap] = useState<Record<number, Song[]>>({});
+  const query = useQuery(["topList"], getToplist);
+
+  const topList = query.data?.list?.slice(0, 4) || [];
 
   // 获取榜单歌单详情
-  const getTopDetail = async () => {
+  const getTopDetail = async (topList: List[]) => {
     const res = await Promise.all(
       topList.map((item) => {
         return getPlaylistTrackList({ id: item.id!, limit: 10 });
@@ -25,25 +26,14 @@ function Leaderboard() {
         }
       }
     });
-    setTopDetailMap(tmpMap);
+    return tmpMap;
   };
 
-  useEffect(() => {
-    // 获取所有榜单
-    const getTopList = async () => {
-      const res = await getToplist();
-      if (res.code === 200) {
-        setTopList(res.list?.slice(0, 4) || []);
-      }
-    };
-    getTopList();
-  }, []);
-
-  useEffect(() => {
-    if (topList.length > 0) {
-      getTopDetail();
-    }
-  }, [topList]);
+  const topMap = useQuery(["topDetailMap", topList], () => getTopDetail(topList), {
+    // 当有榜单信息时再调用
+    enabled: topList.length > 0
+  });
+  const { data: topDetailMap } = topMap;
 
   return (
     <>
@@ -64,7 +54,7 @@ function Leaderboard() {
                 {item.name}
               </Title>
               <ul className="h-full flex flex-col justify-between mt-2">
-                {topDetailMap[item.id!]?.map((track, index) => {
+                {topDetailMap?.[item.id!]?.map((track, index) => {
                   return (
                     <li
                       key={track.id}
