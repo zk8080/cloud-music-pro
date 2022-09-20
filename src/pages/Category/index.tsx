@@ -1,5 +1,4 @@
 import { getCategoryList, getPlaylistByTag } from "@/http/api";
-import { CategoryMapList } from "@/types/category";
 import { Playlist } from "@/types/home";
 import { IconClose } from "@douyinfe/semi-icons";
 import { useQuery } from "@tanstack/react-query";
