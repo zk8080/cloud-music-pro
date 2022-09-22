@@ -1,22 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { routes } from "@/router/index";
-import { Suspense, lazy } from "react";
-import { Button, Empty, Spin } from "@douyinfe/semi-ui";
+import { Button, Empty } from "@douyinfe/semi-ui";
 import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ErrorBoundary } from "react-error-boundary";
 import { IllustrationConstruction, IllustrationConstructionDark } from "@douyinfe/semi-illustrations";
+import NotFountPage from "@/pages/404/index";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 0
-      // suspense: true
     }
   }
 });
-
-const NotFountPage = lazy(() => import("./pages/404/index"));
 
 function App() {
   return (
@@ -46,64 +43,17 @@ function App() {
                   const { path, children } = route;
                   if (children?.length > 0) {
                     return (
-                      <Route
-                        key={path}
-                        path={path}
-                        element={
-                          <Suspense
-                            fallback={
-                              <div className="w-full h-full flex items-center justify-center">
-                                <Spin size="large" />
-                              </div>
-                            }
-                          >
-                            <route.component />
-                          </Suspense>
-                        }
-                      >
+                      <Route key={path} path={path} element={<route.component />}>
                         {children.map((childRoute) => {
                           const { path } = childRoute;
-                          return (
-                            <Route
-                              key={path}
-                              path={path}
-                              element={
-                                <Suspense
-                                  fallback={
-                                    <div className="w-full h-full flex items-center justify-center">
-                                      <Spin size="large" />
-                                    </div>
-                                  }
-                                >
-                                  <childRoute.component />
-                                </Suspense>
-                              }
-                            />
-                          );
+                          return <Route key={path} path={path} element={<childRoute.component />} />;
                         })}
                       </Route>
                     );
                   }
-                  return (
-                    <Route
-                      key={path}
-                      path={path}
-                      element={
-                        <Suspense fallback={<Spin />}>
-                          <route.component />
-                        </Suspense>
-                      }
-                    />
-                  );
+                  return <Route key={path} path={path} element={<route.component />} />;
                 })}
-                <Route
-                  path="*"
-                  element={
-                    <Suspense fallback={<Spin />}>
-                      <NotFountPage />
-                    </Suspense>
-                  }
-                />
+                <Route path="*" element={<NotFountPage />} />
               </Routes>
             </BrowserRouter>
           </ErrorBoundary>

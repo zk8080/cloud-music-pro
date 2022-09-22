@@ -20,5 +20,7 @@
 
   .semi-spin-wrapper {
     @apply flex flex-col items-center justify-center fixed;
+
+    display: flex !important;
   }
 }

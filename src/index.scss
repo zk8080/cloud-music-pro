@@ -22,6 +22,8 @@ body {
 body {
   color: var(--semi-color-text-0);
   background-color: var(--semi-color-bg-0);
+
+  --semi-shadow-elevated: 0 0 1px rgb(0 0 0 / 30%), 0 4px 14px rgb(0 0 0 / 10%);
 }
 
 #root {
