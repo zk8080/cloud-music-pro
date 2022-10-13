@@ -7,6 +7,7 @@ import CategoryTagList from "./components/CategoryTagList";
 import PlayerList from "./components/PlayerList";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import "./index.scss";
+import { Skeleton } from "@douyinfe/semi-ui";
 
 const initialCat = "全部";
 
@@ -16,7 +17,7 @@ function Category() {
   const [playList, setPlayList] = useState<Playlist[]>([]);
   const offsetRef = useRef<number>(0);
 
-  const { data: categoryList = [] } = useQuery(["categoryList"], getCategoryList, {
+  const { data: categoryList = [], isLoading: categoryLoading } = useQuery(["categoryList"], getCategoryList, {
     select: (res) => {
       const { code, sub, categories = {} } = res || {};
       if (code === 200) {
@@ -34,7 +35,7 @@ function Category() {
     }
   });
 
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
     ["playList", curCategory],
     async (obj) => {
       const res = await getPlaylistByTag({ limit: 50, cat: curCategory, offset: obj.pageParam });
@@ -61,34 +62,66 @@ function Category() {
 
   return (
     <div className="category--wrapper">
-      <CategoryTagList
-        categoryList={categoryList}
-        onTagClick={(cat) => {
-          setCurCategory(cat);
-          offsetRef.current = 0;
-        }}
-        curCategory={curCategory}
-      />
-      <h2 className="px-32 my-3 text-3xl flex">
-        {curCategory}
-        {curCategory !== initialCat && (
-          <IconClose
-            onClick={() => {
-              setCurCategory(initialCat);
-              offsetRef.current = 0;
-            }}
-            className="ml-2 cursor-pointer hover:text-primary"
-          />
-        )}
-      </h2>
-      <PlayerList
-        playList={playList}
-        hasMore={hasNextPage}
-        onLoadMore={() => {
-          offsetRef.current += 1;
-          fetchNextPage();
-        }}
-      />
+      <Skeleton
+        placeholder={
+          <div className="px-32 my-3">
+            <Skeleton.Paragraph rows={5} />
+          </div>
+        }
+        loading={categoryLoading}
+        active
+      >
+        <CategoryTagList
+          categoryList={categoryList}
+          onTagClick={(cat) => {
+            setCurCategory(cat);
+            offsetRef.current = 0;
+          }}
+          curCategory={curCategory}
+        />
+      </Skeleton>
+      <Skeleton
+        placeholder={
+          <div className="px-32 my-3">
+            <Skeleton.Title className="w-32 h-8" />
+          </div>
+        }
+        loading={categoryLoading}
+        active
+      >
+        <h2 className="px-32 my-3 text-3xl flex">
+          {curCategory}
+          {curCategory !== initialCat && (
+            <IconClose
+              onClick={() => {
+                setCurCategory(initialCat);
+                offsetRef.current = 0;
+              }}
+              className="ml-2 cursor-pointer hover:text-primary"
+            />
+          )}
+        </h2>
+      </Skeleton>
+      <Skeleton
+        placeholder={
+          <div className="px-32 flex items-center justify-between flex-wrap">
+            {Array.from({ length: 10 }, (v, i) => i).map((item) => (
+              <Skeleton.Image key={item} className="w-56 h-72 mt-3" />
+            ))}
+          </div>
+        }
+        loading={isLoading}
+        active
+      >
+        <PlayerList
+          playList={playList}
+          hasMore={hasNextPage}
+          onLoadMore={() => {
+            offsetRef.current += 1;
+            fetchNextPage();
+          }}
+        />
+      </Skeleton>
     </div>
   );
 }
