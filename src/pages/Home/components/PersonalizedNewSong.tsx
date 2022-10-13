@@ -1,13 +1,13 @@
 import { getPersonalizedNewSong } from "@/http/api";
 import { chunk } from "@/utils";
-import { Carousel, Typography } from "@douyinfe/semi-ui";
+import { Carousel, Skeleton, Typography } from "@douyinfe/semi-ui";
 import SongCard from "@/components/SongCard";
 import { useQuery } from "@tanstack/react-query";
 
 const { Title } = Typography;
 
 function PersonalizedNewSong() {
-  const { data: personalizedList = [] } = useQuery(
+  const { data: personalizedList = [], isLoading } = useQuery(
     ["PersonalizedNewSong"],
     () => getPersonalizedNewSong({ limit: 20 }),
     {
@@ -25,42 +25,56 @@ function PersonalizedNewSong() {
       <Title heading={2} ellipsis={{ showTooltip: true }} className="flex items-center justify-center my-5">
         新碟上架
       </Title>
-      {personalizedList?.length > 0 && (
-        <Carousel
-          className="w-full h-88"
-          theme="dark"
-          speed={1000}
-          animation="fade"
-          showIndicator={false}
-          autoPlay={false}
-          arrowType="hover"
-        >
-          {personalizedList.map((item, index) => {
-            return (
-              <div key={index} className="px-32 flex items-center justify-between">
-                {item.map((childItem) => {
-                  const {
-                    id,
-                    picUrl,
-                    name,
-                    song = {
-                      artists: []
-                    }
-                  } = childItem || {};
-                  return (
-                    <SongCard
-                      key={id}
-                      coverImgUrl={picUrl}
-                      songName={name}
-                      artistsName={song?.artists && song?.artists[0]?.name}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })}
-        </Carousel>
-      )}
+      <Skeleton
+        placeholder={
+          <div className="px-32 flex items-center justify-between h-88">
+            <Skeleton.Image className="w-56" />
+            <Skeleton.Image className="w-56" />
+            <Skeleton.Image className="w-56" />
+            <Skeleton.Image className="w-56" />
+            <Skeleton.Image className="w-56" />
+          </div>
+        }
+        loading={isLoading}
+        active
+      >
+        {personalizedList?.length > 0 && (
+          <Carousel
+            className="w-full h-88"
+            theme="dark"
+            speed={1000}
+            animation="fade"
+            showIndicator={false}
+            autoPlay={false}
+            arrowType="hover"
+          >
+            {personalizedList.map((item, index) => {
+              return (
+                <div key={index} className="px-32 flex items-center justify-between">
+                  {item.map((childItem) => {
+                    const {
+                      id,
+                      picUrl,
+                      name,
+                      song = {
+                        artists: []
+                      }
+                    } = childItem || {};
+                    return (
+                      <SongCard
+                        key={id}
+                        coverImgUrl={picUrl}
+                        songName={name}
+                        artistsName={song?.artists && song?.artists[0]?.name}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </Carousel>
+        )}
+      </Skeleton>
     </>
   );
 }

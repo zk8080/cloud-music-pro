@@ -1,6 +1,6 @@
 import { getPlaylistTrackList, getToplist } from "@/http/api";
 import { List, Song } from "@/types/home";
-import { Typography } from "@douyinfe/semi-ui";
+import { Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useQuery } from "@tanstack/react-query";
 import classNames from "classnames";
 
@@ -33,54 +33,67 @@ function Leaderboard() {
     // 当有榜单信息时再调用
     enabled: topList.length > 0
   });
-  const { data: topDetailMap } = topMap;
+  const { data: topDetailMap, isLoading } = topMap;
 
   return (
     <>
       <Title heading={2} ellipsis={{ showTooltip: true }} className="flex items-center justify-center my-5">
         排行榜
       </Title>
-      <div className="flex mt-5 px-32 justify-between">
-        {topList.map((item) => {
-          return (
-            <div
-              className="flex flex-col w-24/100 h-112 py-4 shadow-2xl rounded-md"
-              key={item.id}
-              style={{
-                backgroundImage: `url(${item.coverImgUrl}?imageView&param=100y100&blur=40x20)`
-              }}
-            >
-              <Title heading={4} className="text-white text-center font-mono italic">
-                {item.name}
-              </Title>
-              <ul className="h-full flex flex-col justify-between mt-2">
-                {topDetailMap?.[item.id!]?.map((track, index) => {
-                  return (
-                    <li
-                      key={track.id}
-                      className="top-detail--item flex items-center px-5 cursor-pointer text-white text-xl"
-                    >
-                      <span
-                        className={classNames("italic", {
-                          "font-bold": index + 1 < 4
-                        })}
+      <Skeleton
+        placeholder={
+          <div className="flex mt-5 px-32 justify-between">
+            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
+          </div>
+        }
+        loading={isLoading}
+        active
+      >
+        <div className="flex mt-5 px-32 justify-between">
+          {topList.map((item) => {
+            return (
+              <div
+                className="flex flex-col w-24/100 h-112 py-4 shadow-2xl rounded-md"
+                key={item.id}
+                style={{
+                  backgroundImage: `url(${item.coverImgUrl}?imageView&param=100y100&blur=40x20)`
+                }}
+              >
+                <Title heading={4} className="text-white text-center font-mono italic">
+                  {item.name}
+                </Title>
+                <ul className="h-full flex flex-col justify-between mt-2">
+                  {topDetailMap?.[item.id!]?.map((track, index) => {
+                    return (
+                      <li
+                        key={track.id}
+                        className="top-detail--item flex items-center px-5 cursor-pointer text-white text-xl"
                       >
-                        {index + 1}.
-                      </span>
-                      <Text className="ml-3 mr-4" ellipsis={{ showTooltip: true }}>
-                        {track.name}
-                      </Text>
-                      <Text className="ml-auto" ellipsis={{ showTooltip: true }}>
-                        {track.ar?.[0]?.name}
-                      </Text>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
+                        <span
+                          className={classNames("italic", {
+                            "font-bold": index + 1 < 4
+                          })}
+                        >
+                          {index + 1}.
+                        </span>
+                        <Text className="ml-3 mr-4" ellipsis={{ showTooltip: true }}>
+                          {track.name}
+                        </Text>
+                        <Text className="ml-auto" ellipsis={{ showTooltip: true }}>
+                          {track.ar?.[0]?.name}
+                        </Text>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+      </Skeleton>
     </>
   );
 }
