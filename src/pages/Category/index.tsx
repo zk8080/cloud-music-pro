@@ -35,7 +35,7 @@ function Category() {
     }
   });
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
     ["playList", curCategory],
     async (obj) => {
       const res = await getPlaylistByTag({ limit: 50, cat: curCategory, offset: obj.pageParam });
@@ -116,6 +116,7 @@ function Category() {
         <PlayerList
           playList={playList}
           hasMore={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
           onLoadMore={() => {
             offsetRef.current += 1;
             fetchNextPage();

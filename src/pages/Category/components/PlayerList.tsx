@@ -7,10 +7,11 @@ interface IPlayerListProps {
   playList?: Playlist[];
   hasMore?: boolean;
   onLoadMore?: () => void;
+  isFetchingNextPage?: boolean;
 }
 
 function PlayerList(props: IPlayerListProps) {
-  const { playList, hasMore, onLoadMore } = props;
+  const { playList, hasMore, onLoadMore, isFetchingNextPage } = props;
 
   const loadMore = hasMore ? (
     <div className="text-center mt-5">
@@ -20,6 +21,7 @@ function PlayerList(props: IPlayerListProps) {
         }}
         type="primary"
         theme="solid"
+        loading={isFetchingNextPage}
       >
         显示更多
       </Button>
