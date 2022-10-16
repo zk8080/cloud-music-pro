@@ -1,6 +1,7 @@
 import MyLayout from "@/layout";
 import Home from "@/pages/Home";
 import Category from "@/pages/Category";
+import Singer from "@/pages/Singer";
 
 export const routes = [
   {
@@ -14,6 +15,10 @@ export const routes = [
       {
         path: "category",
         component: Category
+      },
+      {
+        path: "singer",
+        component: Singer
       }
     ]
   }

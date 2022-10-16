@@ -1,0 +1,9 @@
+.singer--wrapper {
+  li.active {
+    @apply bg-primary;
+
+    span {
+      @apply text-white;
+    }
+  }
+}
