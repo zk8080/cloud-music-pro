@@ -1,11 +1,10 @@
 import { getCategoryList, getPlaylistByTag } from "@/http/api";
 import { Playlist } from "@/types/home";
 import { IconClose } from "@douyinfe/semi-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import CategoryTagList from "./components/CategoryTagList";
 import PlayerList from "./components/PlayerList";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import "./index.scss";
 import { Skeleton } from "@douyinfe/semi-ui";
 

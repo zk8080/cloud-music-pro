@@ -15,6 +15,9 @@ module.exports = {
       width: {
         '24/100': '24%'
       },
+      rotate: {
+        '360': '360deg',
+      }
     },
   },
   plugins: [],

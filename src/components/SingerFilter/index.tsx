@@ -17,7 +17,7 @@ function SingerFilter(props: ISingerFilterProps) {
         const { name, key } = filterItem;
         return (
           <li
-            key={key || idx}
+            key={key || name}
             className={classNames(
               "group text-center rounded-2xl px-3 py-1 mr-2 cursor-pointer hover:text-white text-sm hover:bg-primary active:bg-primary",
               {

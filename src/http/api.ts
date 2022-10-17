@@ -1,3 +1,4 @@
+import { SingerlistRes } from "@/types/singer";
 import { CategoryListRes } from "./../types/category";
 import {
   BannerRes,
@@ -59,4 +60,15 @@ export const getCategoryList = async () => {
 // 根据分类获取歌单列表
 export const getPlaylistByTag = async (params: { limit?: number; cat?: string; offset?: number; order?: string }) => {
   return await http.get<PlaylistRes>("/top/playlist", { params });
+};
+
+// 根据分类获取歌手列表
+export const getSingerlistByTag = async (params: {
+  limit?: number;
+  offset?: number;
+  type?: string;
+  area?: string;
+  initial?: string;
+}) => {
+  return await http.get<SingerlistRes>("/artist/list", { params });
 };
