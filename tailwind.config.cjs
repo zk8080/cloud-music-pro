@@ -17,6 +17,9 @@ module.exports = {
       },
       rotate: {
         '360': '360deg',
+      },
+      maxWidth: {
+        'heart': '1440px'
       }
     },
   },

@@ -63,7 +63,7 @@ function Category() {
     <div className="category--wrapper">
       <Skeleton
         placeholder={
-          <div className="px-32 my-3">
+          <div className="w-heart--wrapper px-32 my-3">
             <Skeleton.Paragraph rows={5} />
           </div>
         }
@@ -81,14 +81,14 @@ function Category() {
       </Skeleton>
       <Skeleton
         placeholder={
-          <div className="px-32 my-3">
+          <div className="w-heart--wrapper px-32 my-3">
             <Skeleton.Title className="w-32 h-8" />
           </div>
         }
         loading={categoryLoading}
         active
       >
-        <h2 className="px-32 my-3 text-3xl flex">
+        <h2 className="w-heart--wrapper px-32 my-3 text-3xl flex">
           {curCategory}
           {curCategory !== initialCat && (
             <IconClose
@@ -103,7 +103,7 @@ function Category() {
       </Skeleton>
       <Skeleton
         placeholder={
-          <div className="px-32 flex items-center justify-between flex-wrap">
+          <div className="w-heart--wrapper px-32 flex items-center justify-between flex-wrap">
             {Array.from({ length: 10 }, (v, i) => i).map((item) => (
               <Skeleton.Image key={item} className="w-56 h-72 mt-3" />
             ))}

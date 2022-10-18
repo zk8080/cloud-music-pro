@@ -27,7 +27,7 @@ function PersonalizedNewSong() {
       </Title>
       <Skeleton
         placeholder={
-          <div className="px-32 flex items-center justify-between h-88">
+          <div className="w-heart--wrapper px-32 flex items-center justify-between h-88">
             <Skeleton.Image className="w-56" />
             <Skeleton.Image className="w-56" />
             <Skeleton.Image className="w-56" />
@@ -40,7 +40,7 @@ function PersonalizedNewSong() {
       >
         {personalizedList?.length > 0 && (
           <Carousel
-            className="w-full h-88"
+            className="w-heart--wrapper h-88"
             theme="dark"
             speed={1000}
             animation="fade"

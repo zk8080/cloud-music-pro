@@ -18,7 +18,7 @@ function SongCard(props: ISongCardProps) {
       className={classNames("w-56", className)}
       shadows="always"
       bordered={false}
-      cover={<CoverImage src={coverImgUrl} />}
+      cover={<CoverImage src={`${coverImgUrl}?param=224y224`} />}
     >
       <Title heading={5} ellipsis={{ showTooltip: true }}>
         {songName}

@@ -44,9 +44,8 @@ function Singer() {
       setSingerList(list);
     }
   }, [data?.pages]);
-  console.log(isLoading, "--isLoading--");
   return (
-    <div className="singer--wrapper">
+    <div className="singer--wrapper w-heart--wrapper">
       <SingerCategory
         curAlpha={initial}
         curArea={area}

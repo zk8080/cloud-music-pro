@@ -18,17 +18,24 @@ const Banner = () => {
         active
       >
         {banners?.length > 0 && (
-          <Carousel className="w-full h-96" speed={1000} animation="fade" autoPlay={false} arrowType="hover">
+          <Carousel
+            className="w-full h-96"
+            speed={1000}
+            animation="fade"
+            autoPlay={false}
+            arrowType="hover"
+            theme="dark"
+          >
             {banners?.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className="px-32 bg-cover bg-center"
+                  className="px-32 bg-cover bg-center flex justify-center"
                   style={{
                     backgroundImage: `url(${item.imageUrl}?imageView&blur=40x20)`
                   }}
                 >
-                  <img className="w-full" src={item.imageUrl} alt="" />
+                  <img className="h-full" src={item.imageUrl} alt="" />
                 </div>
               );
             })}

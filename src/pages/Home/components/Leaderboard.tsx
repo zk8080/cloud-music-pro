@@ -42,7 +42,7 @@ function Leaderboard() {
       </Title>
       <Skeleton
         placeholder={
-          <div className="flex mt-5 px-32 justify-between">
+          <div className="w-heart--wrapper flex mt-5 px-32 justify-between">
             <Skeleton.Image className="w-24/100 h-112 rounded-md" />
             <Skeleton.Image className="w-24/100 h-112 rounded-md" />
             <Skeleton.Image className="w-24/100 h-112 rounded-md" />
@@ -52,7 +52,7 @@ function Leaderboard() {
         loading={isLoading}
         active
       >
-        <div className="flex mt-5 px-32 justify-between">
+        <div className="w-heart--wrapper flex mt-5 px-32 justify-between">
           {topList.map((item) => {
             return (
               <div

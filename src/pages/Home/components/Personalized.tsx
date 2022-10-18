@@ -62,7 +62,7 @@ function Personalized() {
       <div key={curTag}>
         <Skeleton
           placeholder={
-            <div className="px-32 flex items-center justify-between h-80">
+            <div className="w-heart--wrapper px-32 flex items-center justify-between h-80">
               <Skeleton.Image className="w-56" />
               <Skeleton.Image className="w-56" />
               <Skeleton.Image className="w-56" />
@@ -76,7 +76,7 @@ function Personalized() {
           {personalizedList?.length > 0 && (
             <Carousel
               key={curTag}
-              className="w-full h-80"
+              className="w-heart--wrapper h-80"
               speed={1000}
               animation="fade"
               showIndicator={false}

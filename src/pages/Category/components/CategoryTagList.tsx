@@ -24,7 +24,7 @@ function CategoryTagList(props: ICategoryTagListProps) {
   const { categoryList, curCategory, onTagClick } = props;
 
   return (
-    <div className="px-32 flex flex-col mt-6 justify-between">
+    <div className="w-heart--wrapper px-32 flex flex-col mt-6 justify-between">
       {categoryList?.map((item) => {
         const { code, name, list } = item;
         return (

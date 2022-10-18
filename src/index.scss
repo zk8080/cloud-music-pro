@@ -11,6 +11,11 @@
   [type="submit"] {
     background-color: var(--semi-color-primary);
   }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  .w-heart--wrapper {
+    @apply max-w-heart mx-auto;
+  }
 }
 
 html,

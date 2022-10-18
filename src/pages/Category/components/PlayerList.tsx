@@ -34,7 +34,7 @@ function PlayerList(props: IPlayerListProps) {
         gutter: 12,
         span: 5 / 24
       }}
-      className="px-32"
+      className="w-heart--wrapper px-32"
       layout="horizontal"
       dataSource={playList}
       loadMore={loadMore}
