@@ -56,10 +56,13 @@ function Singer() {
       />
       <Skeleton
         placeholder={
-          <div className="px-32 flex items-center justify-between flex-wrap">
+          <div className="px-32 flex items-center justify-between flex-wrap mt-6">
             {Array.from({ length: 10 }, (v, i) => i).map((item) => (
-              <div key={item} className="flex flex-col items-center justify-center">
-                <Skeleton.Image className="w-56 h-56 mb-5 mt-6 rounded-full" />
+              <div
+                key={item}
+                className="w-56 h-64 flex flex-col items-center justify-center mb-5 rounded-md bg-zinc-100 dark:bg-zinc-800"
+              >
+                <Skeleton.Image className="w-44 h-44 mb-5 rounded-full" />
                 <Skeleton.Title className="w-32 h-8" />
               </div>
             ))}

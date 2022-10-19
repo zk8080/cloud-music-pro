@@ -105,7 +105,7 @@ function Category() {
         placeholder={
           <div className="w-heart--wrapper px-32 flex items-center justify-between flex-wrap">
             {Array.from({ length: 10 }, (v, i) => i).map((item) => (
-              <Skeleton.Image key={item} className="w-56 h-72 mt-3" />
+              <Skeleton.Image key={item} className="w-56 h-72 mt-6" />
             ))}
           </div>
         }

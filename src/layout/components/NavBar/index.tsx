@@ -13,9 +13,11 @@ function NavBar() {
   const switchMode = () => {
     const body = document.body;
     if (body.hasAttribute("theme-mode")) {
+      document.documentElement.classList.remove("dark");
       body.removeAttribute("theme-mode");
       setThemeMode("light");
     } else {
+      document.documentElement.classList.add("dark");
       body.setAttribute("theme-mode", "dark");
       setThemeMode("dark");
     }

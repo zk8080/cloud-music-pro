@@ -31,7 +31,7 @@ function PlayerList(props: IPlayerListProps) {
   return (
     <List
       grid={{
-        gutter: 12,
+        gutter: 16,
         span: 5 / 24
       }}
       className="w-heart--wrapper px-32"

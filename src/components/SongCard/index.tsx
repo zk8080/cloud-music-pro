@@ -15,7 +15,7 @@ function SongCard(props: ISongCardProps) {
   const { coverImgUrl, songName, className, artistsName } = props;
   return (
     <Card
-      className={classNames("w-56", className)}
+      className={classNames("w-56 dark:bg-zinc-800", className)}
       shadows="always"
       bordered={false}
       cover={<CoverImage src={`${coverImgUrl}?param=224y224`} />}
