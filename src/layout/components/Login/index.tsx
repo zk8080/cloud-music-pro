@@ -86,6 +86,7 @@ function Login(props: IProps) {
                 label="验证码"
                 placeholder="请输入验证码"
                 className="h-12"
+                rules={[{ required: true, message: "请输入验证码" }]}
                 suffix={
                   <Fragment>
                     {sendMutation.isLoading && <IconLoading className="px-2" spin />}
