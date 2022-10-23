@@ -22,7 +22,7 @@ const Banner = () => {
             className="w-full h-96"
             speed={1000}
             animation="fade"
-            autoPlay={false}
+            autoPlay={true}
             arrowType="hover"
             theme="dark"
           >

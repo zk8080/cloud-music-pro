@@ -1,10 +1,16 @@
 import { IconMoon, IconPulse, IconSun } from "@douyinfe/semi-icons";
 import { Avatar, Nav, Tooltip } from "@douyinfe/semi-ui";
+import { useEventEmitter } from "ahooks";
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.scss";
 
-function NavBar() {
+interface IProps {
+  handleLogin: () => void;
+}
+
+function NavBar(props: IProps) {
+  const { handleLogin } = props;
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -54,7 +60,7 @@ function NavBar() {
             </Tooltip>
           )}
 
-          <Avatar size="small" className="ml-3 cursor-pointer" color="red">
+          <Avatar size="small" className="ml-3 cursor-pointer" color="red" onClick={handleLogin}>
             M
           </Avatar>
         </div>

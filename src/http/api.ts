@@ -72,3 +72,13 @@ export const getSingerlistByTag = async (params: {
 }) => {
   return await http.get<SingerlistRes>("/artist/list", { params });
 };
+
+// 发送验证码
+export const sentCaptcha = async (data: { phone: string }) => {
+  return await http.post("/captcha/sent", data);
+};
+
+// 验证码登录
+export const login = async (data: Record<string, string>) => {
+  return await http.post("/login/cellphone", data);
+};

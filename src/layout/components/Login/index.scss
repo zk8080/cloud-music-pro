@@ -1,0 +1,21 @@
+.login-modal--wrapper {
+  .semi-modal-mask {
+    @apply backdrop-blur-sm;
+  }
+
+  .semi-modal-content {
+    @apply px-0;
+  }
+
+  .phone-input {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      appearance: textfield;
+    }
+  }
+}

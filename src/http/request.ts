@@ -93,4 +93,4 @@ function RequestBuilder(config: RequestConfig) {
   return instance;
 }
 
-export const http = RequestBuilder({ baseURL: "/api" });
+export const http = RequestBuilder({ baseURL: "/api", withCredentials: true });
