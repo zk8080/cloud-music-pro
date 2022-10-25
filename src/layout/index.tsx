@@ -5,17 +5,35 @@ import { IconArrowUp } from "@douyinfe/semi-icons";
 import "./index.scss";
 import MyFooter from "./components/Footer";
 import Login from "./components/Login";
-import { useToggle } from "ahooks";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loginInfoState, loginVisibleState } from "@/recoil/layout";
+import { useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getLoginInfo } from "@/http/api";
 
 const { Header, Footer, Content } = Layout;
 
 function MyLayout() {
-  const [loginVisible, { toggle }] = useToggle();
+  const [showLogin, setShowLogin] = useRecoilState(loginVisibleState);
+  const setLoginInfo = useSetRecoilState(loginInfoState);
+  const toggle = useCallback(() => {
+    setShowLogin(!showLogin);
+  }, [showLogin]);
+
+  useQuery(["loginStatus"], getLoginInfo, {
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      const { code, profile } = data || {};
+      if (code === 200) {
+        setLoginInfo(profile || {});
+      }
+    }
+  });
 
   return (
     <Layout className="cloud-music--layout pt-[60px]">
       <Header className="fixed top-0 z-50 w-full backdrop-blur">
-        <NavBar handleLogin={toggle} />
+        <NavBar />
       </Header>
       <Content>
         <Outlet></Outlet>
@@ -26,7 +44,7 @@ function MyLayout() {
       <BackTop>
         <IconArrowUp />
       </BackTop>
-      <Login visible={loginVisible} onClose={toggle} />
+      <Login visible={showLogin} onClose={toggle} />
     </Layout>
   );
 }

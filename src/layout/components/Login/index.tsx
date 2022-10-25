@@ -1,10 +1,12 @@
 import { sentCaptcha, login } from "@/http/api";
+import { loginInfoState } from "@/recoil/layout";
 import { IconClose, IconLoading, IconSend } from "@douyinfe/semi-icons";
 import { Button, Form, Modal, Toast, Tooltip } from "@douyinfe/semi-ui";
 import { ModalReactProps } from "@douyinfe/semi-ui/lib/es/modal";
 import { useMutation } from "@tanstack/react-query";
 import { useCountDown } from "ahooks";
 import { Fragment, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import "./index.scss";
 
 type IProps = ModalReactProps & {
@@ -13,6 +15,7 @@ type IProps = ModalReactProps & {
 
 function Login(props: IProps) {
   const { onClose } = props;
+  const setLoginInfo = useSetRecoilState(loginInfoState);
   const [targetDate, setTargetDate] = useState<number>();
 
   const [countdown] = useCountDown({
@@ -41,10 +44,13 @@ function Login(props: IProps) {
       return login(loginParams);
     },
     {
-      onSuccess: async () => {
+      onSuccess: async (data) => {
         setTargetDate(undefined);
-        Toast.success({ content: "登录成功", showClose: false });
-        onClose?.();
+        if (data.code === 200) {
+          setLoginInfo(data.profile || {});
+          Toast.success({ content: "登录成功", showClose: false });
+          onClose?.();
+        }
       }
     }
   );

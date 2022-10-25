@@ -1,3 +1,4 @@
+import { LoginRes, LoginStatusRes } from "@/types/layout";
 import { SingerlistRes } from "@/types/singer";
 import { CategoryListRes } from "./../types/category";
 import {
@@ -80,5 +81,20 @@ export const sentCaptcha = async (data: { phone: string }) => {
 
 // 验证码登录
 export const login = async (data: Record<string, string>) => {
-  return await http.post("/login/cellphone", data);
+  return await http.post<LoginRes>("/login/cellphone", data);
+};
+
+// 退出登录
+export const logout = async () => {
+  return await http.post(`/logout?timestamp=${+new Date()}`);
+};
+
+// 获取登录状态
+export const getLoginStatus = async () => {
+  return await http.get<LoginStatusRes>("/login/status");
+};
+
+// 获取登录信息
+export const getLoginInfo = async () => {
+  return await http.get<LoginStatusRes>(`/user/account?timestamp=${+new Date()}`);
 };

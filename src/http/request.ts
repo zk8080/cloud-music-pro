@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { Toast } from "@douyinfe/semi-ui";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 // 拦截器定义
 export interface RequestInterceptors {
@@ -65,11 +66,32 @@ function RequestBuilder(config: RequestConfig) {
   // 全局响应拦截器
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
-      console.log("全局响应拦截器");
+      console.log("全局响应拦截器", response);
       // 关闭loading
       hideLoading();
-      const { code, msg } = response?.data || {};
+      // 获取登录状态特殊处理
+      if (["/user/account", "/login/status"].includes(response.config.url!)) {
+        const { code, msg, message } = response?.data?.data || {};
+        if (code !== 200) {
+          Toast.error({
+            content: message || msg,
+            showClose: false
+          });
+          // 处理错误情况
+          return Promise.reject({
+            code,
+            message: msg
+          });
+        }
+        // 返回值为res.data，即后端接口返回的数据，减少解构的层级，以及统一响应数据格式。
+        return response.data?.data;
+      }
+      const { code, msg, message } = response?.data || {};
       if (code !== 200) {
+        Toast.error({
+          content: message || msg,
+          showClose: false
+        });
         // 处理错误情况
         return Promise.reject({
           code,
@@ -79,13 +101,18 @@ function RequestBuilder(config: RequestConfig) {
       // 返回值为res.data，即后端接口返回的数据，减少解构的层级，以及统一响应数据格式。
       return response.data;
     },
-    (err: any) => {
+    (err: AxiosError<{ code: number; message: string }>) => {
       // 关闭loading
       hideLoading();
-      const { code, message } = err || {};
+      const { code, message, response } = err || {};
+      const { data } = response || {};
+      Toast.error({
+        content: data?.message || message,
+        showClose: false
+      });
       return Promise.reject({
-        code,
-        message
+        code: data?.code || code,
+        message: data?.message || message
       });
     }
   );

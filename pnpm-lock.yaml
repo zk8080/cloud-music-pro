@@ -34,6 +34,7 @@ specifiers:
   react-dom: ^18.2.0
   react-error-boundary: ^3.1.4
   react-router-dom: ^6.3.0
+  recoil: ^0.7.6
   sass: ^1.54.5
   stylelint: ^14.11.0
   stylelint-config-prettier: ^9.0.3
@@ -64,6 +65,7 @@ dependencies:
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-error-boundary: registry.npmmirror.com/react-error-boundary/3.1.4_react@18.2.0
   react-router-dom: registry.npmmirror.com/react-router-dom/6.3.0_biqbaboplfbrettd7655fr4n2y
+  recoil: registry.npmmirror.com/recoil/0.7.6_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
   '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/17.1.1_ts-node@10.9.1
@@ -3306,6 +3308,12 @@ packages:
     version: 1.0.4
     dev: true
 
+  registry.npmmirror.com/hamt_plus/1.0.2:
+    resolution: {integrity: sha512-t2JXKaehnMb9paaYA7J0BX8QQAY8lwfQ9Gjf4pg/mk4krt+cmwmU652HOoWonf+7+EQV97ARPMhhVgU1ra2GhA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hamt_plus/-/hamt_plus-1.0.2.tgz}
+    name: hamt_plus
+    version: 1.0.2
+    dev: false
+
   registry.npmmirror.com/hard-rejection/2.1.0:
     resolution: {integrity: sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hard-rejection/-/hard-rejection-2.1.0.tgz}
     name: hard-rejection
@@ -4884,6 +4892,26 @@ packages:
     dependencies:
       picomatch: registry.npmmirror.com/picomatch/2.3.1
     dev: true
+
+  registry.npmmirror.com/recoil/0.7.6_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-hsBEw7jFdpBCY/tu2GweiyaqHKxVj6EqF2/SfrglbKvJHhpN57SANWvPW+gE90i3Awi+A5gssOd3u+vWlT+g7g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/recoil/-/recoil-0.7.6.tgz}
+    id: registry.npmmirror.com/recoil/0.7.6
+    name: recoil
+    version: 0.7.6
+    peerDependencies:
+      react: '>=16.13.1'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      hamt_plus: registry.npmmirror.com/hamt_plus/1.0.2
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+    dev: false
 
   registry.npmmirror.com/redent/3.0.0:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/redent/-/redent-3.0.0.tgz}

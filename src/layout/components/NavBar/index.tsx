@@ -1,16 +1,19 @@
+import { logout } from "@/http/api";
+import { loginInfoState, loginVisibleState } from "@/recoil/layout";
 import { IconMoon, IconPulse, IconSun } from "@douyinfe/semi-icons";
-import { Avatar, Nav, Tooltip } from "@douyinfe/semi-ui";
-import { useEventEmitter } from "ahooks";
+import { Avatar, Button, Card, Nav, Popover, Tooltip, Typography } from "@douyinfe/semi-ui";
+import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import "./index.scss";
 
-interface IProps {
-  handleLogin: () => void;
-}
+const { Meta } = Card;
+const { Text } = Typography;
 
-function NavBar(props: IProps) {
-  const { handleLogin } = props;
+function NavBar() {
+  const setShowLogin = useSetRecoilState(loginVisibleState);
+  const [{ nickname, avatarUrl, userId, signature }, setLoginInfo] = useRecoilState(loginInfoState);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -30,6 +33,18 @@ function NavBar(props: IProps) {
   };
 
   const selectKeys = useMemo(() => [pathname], [pathname]);
+
+  // 退出登录
+  const logoutMutation = useMutation(
+    () => {
+      return logout();
+    },
+    {
+      onSuccess: async (data) => {
+        setLoginInfo({});
+      }
+    }
+  );
 
   return (
     <Nav
@@ -59,10 +74,43 @@ function NavBar(props: IProps) {
               <IconMoon className="text-3xl cursor-pointer" size="inherit" onClick={switchMode} />
             </Tooltip>
           )}
-
-          <Avatar size="small" className="ml-3 cursor-pointer" color="red" onClick={handleLogin}>
-            M
-          </Avatar>
+          {userId ? (
+            <Popover
+              content={
+                <Card
+                  className="w-56"
+                  title={<Meta title={nickname} avatar={<Avatar alt="avatarUrl" size="default" src={avatarUrl} />} />}
+                  footerStyle={{ display: "flex", justifyContent: "flex-end" }}
+                  footer={
+                    <Button
+                      theme="solid"
+                      type="danger"
+                      onClick={() => {
+                        logoutMutation.mutate();
+                      }}
+                    >
+                      退出登录
+                    </Button>
+                  }
+                >
+                  <Text>{signature}</Text>
+                </Card>
+              }
+            >
+              <Avatar size="small" className="ml-3 cursor-pointer" color="red" src={avatarUrl}></Avatar>
+            </Popover>
+          ) : (
+            <Button
+              onClick={() => {
+                setShowLogin(true);
+              }}
+              theme="borderless"
+              type="primary"
+              className="bg-transparent ml-2"
+            >
+              登录
+            </Button>
+          )}
         </div>
       }
     />
