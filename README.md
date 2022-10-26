@@ -4,7 +4,7 @@
 
 ## 项目体验地址
 
-[💗Music](https://cloud-music-pro.vercel.app/)
+[💗Music](https://cloud-music-pro.netlify.app/)
 
 ## 功能列表
 
@@ -15,6 +15,7 @@
   - [x] 排行榜
 - [x] 全部歌单页
   - [x] 歌单分类查询
+- [x] 登录
 - [ ] 歌单详情
 - [ ] 音乐播放详情
 - [ ] 搜索功能
