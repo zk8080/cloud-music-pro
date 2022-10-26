@@ -1,6 +1,6 @@
 [[redirects]]
   from = "/api/*"
-  to = "https://netease-cloud-music-api-mu-self.vercel.app/"
+  to = "https://netease-cloud-music-api-mu-self.vercel.app/:splat"
   status = 200
   force = true
   [redirects.headers]
