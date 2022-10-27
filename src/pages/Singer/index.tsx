@@ -3,7 +3,7 @@ import { Artist } from "@/types/home";
 import { SearchInfoType } from "@/types/singer";
 import { Skeleton } from "@douyinfe/semi-ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import SingerCategory from "./components/SingerCategory";
 import SingerList from "./components/SingerList";
 import "./index.scss";
@@ -18,8 +18,6 @@ function Singer() {
 
   const [singerList, setSingerList] = useState<Artist[]>([]);
 
-  const offsetRef = useRef<number>(0);
-
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
     ["singerList", searchInfo],
     async (obj) => {
@@ -27,9 +25,9 @@ function Singer() {
       return res;
     },
     {
-      getNextPageParam: (lastPage) => {
+      getNextPageParam: (lastPage, page) => {
         if (lastPage.more) {
-          return offsetRef.current * 30;
+          return page.length * 30;
         }
         return;
       }
@@ -76,7 +74,6 @@ function Singer() {
           hasMore={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           onLoadMore={() => {
-            offsetRef.current += 1;
             fetchNextPage();
           }}
         />

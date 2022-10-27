@@ -2,7 +2,7 @@ import { getCategoryList, getPlaylistByTag } from "@/http/api";
 import { Playlist } from "@/types/home";
 import { IconClose } from "@douyinfe/semi-icons";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CategoryTagList from "./components/CategoryTagList";
 import PlayerList from "./components/PlayerList";
 import "./index.scss";
@@ -11,10 +11,8 @@ import { Skeleton } from "@douyinfe/semi-ui";
 const initialCat = "全部";
 
 function Category() {
-  // const [categoryList, setCategoryList] = useState<CategoryMapList[]>([]);
   const [curCategory, setCurCategory] = useState<string>(initialCat);
   const [playList, setPlayList] = useState<Playlist[]>([]);
-  const offsetRef = useRef<number>(0);
 
   const { data: categoryList = [], isLoading: categoryLoading } = useQuery(["categoryList"], getCategoryList, {
     select: (res) => {
@@ -37,16 +35,17 @@ function Category() {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
     ["playList", curCategory],
     async (obj) => {
-      const res = await getPlaylistByTag({ limit: 50, cat: curCategory, offset: obj.pageParam });
+      const res = await getPlaylistByTag({ limit: 20, cat: curCategory, offset: obj.pageParam || 0 });
       return res;
     },
     {
-      getNextPageParam: (lastPage) => {
+      getNextPageParam: (lastPage, page) => {
         if (lastPage.more) {
-          return offsetRef.current * 50;
+          return page.length * 20;
         }
         return;
-      }
+      },
+      refetchOnWindowFocus: false
     }
   );
 
@@ -74,7 +73,6 @@ function Category() {
           categoryList={categoryList}
           onTagClick={(cat) => {
             setCurCategory(cat);
-            offsetRef.current = 0;
           }}
           curCategory={curCategory}
         />
@@ -94,7 +92,6 @@ function Category() {
             <IconClose
               onClick={() => {
                 setCurCategory(initialCat);
-                offsetRef.current = 0;
               }}
               className="ml-2 cursor-pointer hover:text-primary"
             />
@@ -117,7 +114,6 @@ function Category() {
           hasMore={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           onLoadMore={() => {
-            offsetRef.current += 1;
             fetchNextPage();
           }}
         />

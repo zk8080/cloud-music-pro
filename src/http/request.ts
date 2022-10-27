@@ -45,7 +45,7 @@ function RequestBuilder(config: RequestConfig) {
     (request: AxiosRequestConfig) => {
       // 显示loading
       showLoading();
-      console.log("全局请求拦截器");
+      // console.log("全局请求拦截器");
       return request;
     },
     (err: any) => err
@@ -66,7 +66,7 @@ function RequestBuilder(config: RequestConfig) {
   // 全局响应拦截器
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
-      console.log("全局响应拦截器", response);
+      // console.log("全局响应拦截器", response);
       // 关闭loading
       hideLoading();
       // 获取登录状态特殊处理
