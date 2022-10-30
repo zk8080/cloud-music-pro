@@ -11,7 +11,7 @@ module.exports = {
         128: '32rem'
       },
       colors: {
-        primary: `rgba(var(--semi-pink-5), <alpha-value>)`
+        primary: `rgba(var(--semi-pink-5), <alpha-value>)`,
       },
       width: {
         '24/100': '24%'

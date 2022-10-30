@@ -18,6 +18,15 @@
   }
 }
 
+.semi-button-tertiary {
+  color: #fff;
+  background-color: var(--semi-color-tertiary);
+}
+
+.semi-button:focus {
+  outline: none;
+}
+
 html,
 body {
   width: 100%;
