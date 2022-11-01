@@ -93,6 +93,7 @@ export interface Song {
   artists?: Artist[];
   ar?: Artist[];
   album?: Album;
+  al?: Album;
   starred?: boolean;
   popularity?: number;
   score?: number;

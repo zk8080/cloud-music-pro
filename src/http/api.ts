@@ -1,5 +1,6 @@
 import { LoginRes, LoginStatusRes } from "@/types/layout";
 import { SingerlistRes } from "@/types/singer";
+import { SongListDetailRes } from "@/types/songList";
 import { CategoryListRes } from "./../types/category";
 import {
   BannerRes,
@@ -48,7 +49,7 @@ export const getToplist = async () => {
   return await http.get<ToplistRes>("/toplist");
 };
 
-// 获取歌单详情
+// 获取歌单详情歌曲列表
 export const getPlaylistTrackList = async (params: { id: number; limit?: number }) => {
   return await http.get<PlaylistDetailRes>("/playlist/track/all", { params });
 };
@@ -97,4 +98,9 @@ export const getLoginStatus = async () => {
 // 获取登录信息
 export const getLoginInfo = async () => {
   return await http.get<LoginStatusRes>(`/user/account?timestamp=${+new Date()}`);
+};
+
+// 获取歌单详情
+export const getSongListDetail = async (params: { id?: string }) => {
+  return await http.get<SongListDetailRes>("/playlist/detail", { params });
 };

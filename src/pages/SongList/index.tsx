@@ -1,121 +1,122 @@
-import { Avatar, Button, Table, Tag, Typography } from "@douyinfe/semi-ui";
-import { IconLikeHeart, IconExternalOpen, IconMore } from "@douyinfe/semi-icons";
+import { Button, Empty, Skeleton, Table, Tag, Typography } from "@douyinfe/semi-ui";
+import { IconLikeHeart, IconExternalOpen } from "@douyinfe/semi-icons";
 import { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import { getPlaylistTrackList, getSongListDetail } from "@/http/api";
+import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import { Song } from "@/types/home";
 
 const { Title, Text } = Typography;
 
-const data = [
-  {
-    key: "1",
-    name: "Semi Design 设计稿.fig",
-    nameIconSrc: "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/figma-icon.png",
-    size: "2M",
-    owner: "姜鹏志",
-    updateTime: "2020-02-02 05:13",
-    avatarBg: "grey"
-  },
-  {
-    key: "2",
-    name: "Semi Design 分享演示文稿",
-    nameIconSrc: "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/docs-icon.png",
-    size: "2M",
-    owner: "郝宣",
-    updateTime: "2020-01-17 05:31",
-    avatarBg: "red"
-  },
-  {
-    key: "3",
-    name: "设计文档",
-    nameIconSrc: "https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/docs-icon.png",
-    size: "34KB",
-    owner: "Zoey Edwards",
-    updateTime: "2020-01-26 11:01",
-    avatarBg: "light-blue"
-  }
-];
-
-type RecordType = {
-  key: string;
-  name: string;
-  nameIconSrc: string;
-  size: string;
-  owner: string;
-  updateTime: string;
-  avatarBg: string;
-};
-
 function SongList() {
-  const columns: ColumnProps<RecordType>[] = [
+  const { id } = useParams();
+  const {
+    data: detailData,
+    isLoading,
+    isError
+  } = useQuery(["songDetail", id], () => getSongListDetail({ id }), {
+    select(data) {
+      if (data.code === 200) return data.playlist || {};
+    }
+  });
+
+  const { name, coverImgUrl, tags, description } = detailData || {};
+
+  const { data: listData, isLoading: listLoading } = useQuery(
+    ["songList", id],
+    () => getPlaylistTrackList({ id: parseInt(id!) }),
     {
-      title: "标题",
-      dataIndex: "name",
+      select(data) {
+        if (data.code === 200) return data.songs;
+      }
+    }
+  );
+
+  const columns: ColumnProps<Song>[] = [
+    {
+      title: "序号",
+      dataIndex: "sort",
+      render: (text, record, index) => index + 1
+    },
+    {
+      title: "歌曲",
+      dataIndex: "name"
+    },
+    {
+      title: "歌手",
+      dataIndex: "singer",
       render: (text, record) => {
-        return (
-          <div>
-            <Avatar size="small" shape="square" src={record.nameIconSrc} style={{ marginRight: 12 }}></Avatar>
-            {text}
-          </div>
-        );
+        return record?.ar?.[0]?.name || "--";
       }
     },
     {
-      title: "大小",
-      dataIndex: "size"
-    },
-    {
-      title: "所有者",
-      dataIndex: "owner",
-      render: (text) => {
-        return (
-          <div>
-            <Avatar size="small" style={{ marginRight: 4 }}>
-              {typeof text === "string" && text.slice(0, 1)}
-            </Avatar>
-            {text}
-          </div>
-        );
-      }
-    },
-    {
-      title: "更新日期",
-      dataIndex: "updateTime"
-    },
-    {
-      title: "",
-      dataIndex: "operate",
-      render: () => {
-        return <IconMore />;
+      title: "专辑",
+      dataIndex: "album",
+      render: (text, record) => {
+        return record?.al?.name || "--";
       }
     }
   ];
-
+  if (isError) {
+    return (
+      <Empty
+        image={<IllustrationNoResult />}
+        darkModeImage={<IllustrationNoResultDark />}
+        description={"没有找到相关歌单"}
+        className="p-8"
+      />
+    );
+  }
   return (
     <div className="flex flex-col w-heart--wrappe px-32">
-      <div className="flex py-6">
-        <div className="w-64 h-64 bg-red-400 mr-10">图片</div>
-        <div className="flex flex-col">
-          <Title heading={3}>标题</Title>
-          <Text className="mt-4">描述描述描述描述描述描述描述描述描述描述描述描述描述描述描述</Text>
-          <div className="mt-4">
-            <Tag size="large" color="red">
-              标签
-            </Tag>
+      <Skeleton
+        placeholder={
+          <div className="flex py-6">
+            <div className="w-64 h-64 shrink-0 mr-10">
+              <Skeleton.Image className="w-full h-full" />
+            </div>
+            <div className="flex-1 flex flex-col">
+              <Skeleton.Title className="mb-2" />
+              <Skeleton.Paragraph rows={3} />
+              <Skeleton.Button className="mt-auto" />
+            </div>
           </div>
-          <div className="mt-auto">
-            <Button type="primary" theme="solid" size="large" className="mr-4">
-              播放全部
-            </Button>
-            <Button type="tertiary" theme="solid" size="large" icon={<IconLikeHeart />} className="mr-4">
-              收藏
-            </Button>
-            <Button type="tertiary" theme="solid" icon={<IconExternalOpen />} size="large">
-              分享
-            </Button>
+        }
+        loading={isLoading}
+        active
+      >
+        <div className="flex py-6">
+          <div className="w-64 h-64 shrink-0 mr-10">
+            <img src={`${coverImgUrl}?param=256y256`} className="w-full h-full" alt="" />
+          </div>
+          <div className="flex flex-col">
+            <Title heading={3}>{name}</Title>
+            <Text className="mt-4">{description}</Text>
+            <div className="mt-4">
+              {tags?.map((item) => (
+                <Tag size="large" color="red" className="mr-3" key={item}>
+                  #{item}
+                </Tag>
+              ))}
+            </div>
+            <div className="mt-auto">
+              <Button type="primary" theme="solid" size="large" className="mr-4">
+                播放全部
+              </Button>
+              <Button type="tertiary" theme="solid" size="large" icon={<IconLikeHeart />} className="mr-4">
+                收藏
+              </Button>
+              <Button type="tertiary" theme="solid" icon={<IconExternalOpen />} size="large">
+                分享
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </Skeleton>
+
       <Title heading={2}>全部歌曲</Title>
-      <Table columns={columns} dataSource={data} pagination={false} className="mt-5" />;
+      <Table loading={listLoading} columns={columns} dataSource={listData || []} pagination={false} className="mt-5" />
     </div>
   );
 }

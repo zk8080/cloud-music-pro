@@ -22,7 +22,7 @@ export const routes = [
         component: Singer
       },
       {
-        path: "songList",
+        path: "songList/:id",
         component: SongList
       }
     ]
