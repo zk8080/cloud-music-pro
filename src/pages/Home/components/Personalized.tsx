@@ -5,10 +5,12 @@ import { useState } from "react";
 import classNames from "classnames";
 import SongCard from "@/components/SongCard";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 function Personalized() {
+  const navigate = useNavigate();
   const [curTag, setCurTag] = useState<string>("全部");
 
   const { data: tagList = [] } = useQuery(["hotTag"], getHotTag, {
@@ -89,7 +91,16 @@ function Personalized() {
                   <div key={`${curTag}${index}`} className="px-32 flex items-center justify-between">
                     {item.map((childItem) => {
                       const { id, coverImgUrl, name } = childItem || {};
-                      return <SongCard key={id} coverImgUrl={coverImgUrl} songName={name} />;
+                      return (
+                        <div
+                          key={id}
+                          onClick={() => {
+                            navigate(`/songList/${id}`);
+                          }}
+                        >
+                          <SongCard coverImgUrl={coverImgUrl} songName={name} />
+                        </div>
+                      );
                     })}
                   </div>
                 );

@@ -1,0 +1,8 @@
+.song-list--wrapper {
+  .semi-table-thead,
+  .semi-table-tbody {
+    > .semi-table-row > .song-list--duration {
+      @apply pr-20;
+    }
+  }
+}

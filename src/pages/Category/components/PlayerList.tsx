@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { Button, List } from "@douyinfe/semi-ui";
 import SongCard from "@/components/SongCard";
 import { Playlist } from "@/types/home";
+import { useNavigate } from "react-router-dom";
 
 interface IPlayerListProps {
   playList?: Playlist[];
@@ -12,7 +13,7 @@ interface IPlayerListProps {
 
 function PlayerList(props: IPlayerListProps) {
   const { playList, hasMore, onLoadMore, isFetchingNextPage } = props;
-
+  const navigate = useNavigate();
   const loadMore = hasMore ? (
     <div className="text-center mt-5">
       <Button
@@ -39,9 +40,14 @@ function PlayerList(props: IPlayerListProps) {
       dataSource={playList}
       loadMore={loadMore}
       renderItem={(item) => {
-        const { name, coverImgUrl } = item;
+        const { name, coverImgUrl, id } = item;
         return (
-          <List.Item className="mt-6">
+          <List.Item
+            className="mt-6"
+            onClick={() => {
+              navigate(`/songList/${id}`);
+            }}
+          >
             <SongCard songName={name} coverImgUrl={coverImgUrl} />
           </List.Item>
         );
