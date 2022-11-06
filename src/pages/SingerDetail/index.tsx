@@ -11,7 +11,7 @@ const { Title } = Typography;
 function SingerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: detailData, isLoading, isError } = useQuery(["songDetail", id], () => getSingerDetail({ id }));
+  const { data: detailData, isLoading, isError } = useQuery(["singerDetail", id], () => getSingerDetail({ id }));
 
   const { artist, hotSongs } = detailData || {};
 
