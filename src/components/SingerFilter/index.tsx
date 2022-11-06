@@ -13,7 +13,7 @@ function SingerFilter(props: ISingerFilterProps) {
   const { filterList, curTag, onTagClick } = props;
   return (
     <ul className="flex flex-wrap mb-4">
-      {filterList?.map((filterItem, idx) => {
+      {filterList?.map((filterItem) => {
         const { name, key } = filterItem;
         return (
           <li

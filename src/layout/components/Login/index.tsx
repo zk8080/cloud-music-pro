@@ -76,7 +76,7 @@ function Login(props: IProps) {
           className="w-96 flex flex-col px-5 justify-center relative"
           onSubmit={(values) => loginMutation.mutate(values)}
         >
-          {({ formState, values, formApi }) => (
+          {({ formApi }) => (
             <>
               <IconClose className="absolute top-5 right-5 cursor-pointer text-xl" onClick={onClose} />
               <Form.Input

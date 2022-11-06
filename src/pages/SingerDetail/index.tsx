@@ -1,44 +1,28 @@
-import { Button, Empty, Skeleton, Tag, Typography } from "@douyinfe/semi-ui";
-import { IconHeartStroked, IconShareStroked } from "@douyinfe/semi-icons";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import { getPlaylistTrackList, getSongListDetail } from "@/http/api";
-import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SongListTable from "@/components/SongListTable";
+import { getSingerDetail } from "@/http/api";
+import { IconHeartStroked, IconShareStroked } from "@douyinfe/semi-icons";
+import { Skeleton, Button, Typography, TabPane, Tabs, Empty } from "@douyinfe/semi-ui";
+import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
-function SongList() {
+function SingerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    data: detailData,
-    isLoading,
-    isError
-  } = useQuery(["songDetail", id], () => getSongListDetail({ id }), {
-    select(data) {
-      if (data.code === 200) return data.playlist || {};
-    }
-  });
+  const { data: detailData, isLoading, isError } = useQuery(["songDetail", id], () => getSingerDetail({ id }));
 
-  const { name, coverImgUrl, tags, description } = detailData || {};
+  const { artist, hotSongs } = detailData || {};
 
-  const { data: listData, isLoading: listLoading } = useQuery(
-    ["songList", id],
-    () => getPlaylistTrackList({ id: parseInt(id!) }),
-    {
-      select(data) {
-        if (data.code === 200) return data.songs;
-      }
-    }
-  );
+  const { picUrl, name } = artist || {};
 
   if (isError) {
     return (
       <Empty
         image={<IllustrationNoResult />}
         darkModeImage={<IllustrationNoResultDark />}
-        description={"没有找到相关歌单"}
+        description={"没有找到歌手信息"}
         className="p-8"
       >
         <Button theme="solid" type="primary" onClick={() => navigate(-1)}>
@@ -47,17 +31,18 @@ function SongList() {
       </Empty>
     );
   }
+
   return (
     <div className="flex flex-col w-heart--wrappe px-32">
       <Skeleton
         placeholder={
           <div className="flex py-6">
-            <div className="w-64 h-64 shrink-0 mr-8">
+            <div className="w-44 h-44 rounded-full shrink-0 mr-8 overflow-hidden">
               <Skeleton.Image className="w-full h-full" />
             </div>
             <div className="flex-1 flex flex-col">
               <Skeleton.Title className="mb-2" />
-              <Skeleton.Paragraph rows={3} />
+              {/* <Skeleton.Paragraph rows={3} /> */}
               <Skeleton.Button className="mt-auto" />
             </div>
           </div>
@@ -66,12 +51,16 @@ function SongList() {
         active
       >
         <div className="flex py-6">
-          <div className="w-64 h-64 shrink-0 mr-8">
-            <img src={`${coverImgUrl}?param=224y224`} className="w-full h-full" alt="" />
+          <div className="group w-44 h-44 rounded-full mr-8 cursor-pointer overflow-hidden shrink-0">
+            <img
+              className="rounded-full w-full h-full group-hover:scale-125 transition duration-500 ease-in-out"
+              src={`${picUrl}?param=160y160`}
+              alt=""
+            />
           </div>
           <div className="flex flex-col">
             <Title heading={2}>{name}</Title>
-            <Paragraph
+            {/* <Paragraph
               ellipsis={{
                 rows: 4,
                 expandable: true,
@@ -79,18 +68,11 @@ function SongList() {
               }}
               className="mt-4"
             >
-              {description}
-            </Paragraph>
-            <div className="mt-4 mb-4">
-              {tags?.map((item) => (
-                <Tag size="large" color="red" className="mr-3" key={item}>
-                  #{item}
-                </Tag>
-              ))}
-            </div>
+              {"描述123"}
+            </Paragraph> */}
             <div className="mt-auto">
               <Button type="primary" theme="solid" size="large" className="mr-4">
-                播放全部
+                播放热门歌曲
               </Button>
               <Button type="tertiary" theme="solid" size="large" icon={<IconHeartStroked />} className="mr-4">
                 收藏
@@ -102,11 +84,19 @@ function SongList() {
           </div>
         </div>
       </Skeleton>
-
-      <Title heading={3}>全部歌曲</Title>
-      <SongListTable tableLoading={listLoading} dataSource={listData} />
+      <Tabs type="button">
+        <TabPane tab="热门歌曲" itemKey="1">
+          <SongListTable tableLoading={isLoading} dataSource={hotSongs} />
+        </TabPane>
+        <TabPane tab="所有专辑" itemKey="2">
+          🚧 WIP
+        </TabPane>
+        <TabPane tab="相关MV" itemKey="3">
+          🚧 WIP
+        </TabPane>
+      </Tabs>
     </div>
   );
 }
 
-export default SongList;
+export default SingerDetail;

@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { Button, List, Typography } from "@douyinfe/semi-ui";
 import { Artist } from "@/types/home";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -13,7 +14,7 @@ interface IPlayerListProps {
 
 function SingerList(props: IPlayerListProps) {
   const { singerList, hasMore, onLoadMore, isFetchingNextPage } = props;
-
+  const navigate = useNavigate();
   const loadMore = hasMore ? (
     <div className="text-center mt-5">
       <Button
@@ -40,9 +41,12 @@ function SingerList(props: IPlayerListProps) {
       dataSource={singerList}
       loadMore={loadMore}
       renderItem={(item) => {
-        const { name, picUrl } = item;
+        const { name, picUrl, id } = item;
         return (
-          <List.Item className="mt-6 flex flex-col w-56 h-64 items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800">
+          <List.Item
+            className="mt-6 flex flex-col w-56 h-64 items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800"
+            onClick={() => navigate(`/singerDetail/${id}`)}
+          >
             <div className="group w-44 h-44 rounded-full mb-5 cursor-pointer overflow-hidden">
               <img
                 className="rounded-full w-full h-full group-hover:scale-125 transition duration-500 ease-in-out"

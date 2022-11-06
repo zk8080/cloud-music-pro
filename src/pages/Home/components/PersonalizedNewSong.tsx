@@ -66,6 +66,7 @@ function PersonalizedNewSong() {
                         coverImgUrl={picUrl}
                         songName={name}
                         artistsName={song?.artists && song?.artists[0]?.name}
+                        artistsId={song?.artists && song?.artists[0]?.id}
                       />
                     );
                   })}

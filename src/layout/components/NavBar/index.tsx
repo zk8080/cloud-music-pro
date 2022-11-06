@@ -40,7 +40,7 @@ function NavBar() {
       return logout();
     },
     {
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         setLoginInfo({});
       }
     }

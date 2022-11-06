@@ -1,5 +1,6 @@
 import { Card, Typography } from "@douyinfe/semi-ui";
 import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 import CoverImage from "../CoverImage";
 
 const { Title, Text } = Typography;
@@ -9,10 +10,14 @@ interface ISongCardProps {
   songName?: string;
   className?: string;
   artistsName?: string;
+  artistsId?: number;
 }
 
 function SongCard(props: ISongCardProps) {
-  const { coverImgUrl, songName, className, artistsName } = props;
+  const { coverImgUrl, songName, className, artistsName, artistsId } = props;
+
+  const navigate = useNavigate();
+
   return (
     <Card
       className={classNames("w-56 dark:bg-zinc-800", className)}
@@ -23,7 +28,11 @@ function SongCard(props: ISongCardProps) {
       <Title heading={5} ellipsis={{ showTooltip: true }}>
         {songName}
       </Title>
-      {artistsName && <Text>{artistsName}</Text>}
+      {artistsId && (
+        <Text className="hover:text-primary cursor-pointer" onClick={() => navigate(`/singerDetail/${artistsId}`)}>
+          {artistsName}
+        </Text>
+      )}
     </Card>
   );
 }
