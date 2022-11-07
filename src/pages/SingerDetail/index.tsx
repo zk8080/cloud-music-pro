@@ -1,16 +1,21 @@
 import SongListTable from "@/components/SongListTable";
 import { getSingerDetail } from "@/http/api";
 import { IconHeartStroked, IconShareStroked } from "@douyinfe/semi-icons";
-import { Skeleton, Button, Typography, TabPane, Tabs, Empty } from "@douyinfe/semi-ui";
+import { Skeleton, Button, Typography, TabPane, Tabs, Empty, Divider } from "@douyinfe/semi-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
+import SingerAlbum from "./components/SingerAlbum";
+import { useState } from "react";
+import "./index.scss";
+import classNames from "classnames";
 
 const { Title } = Typography;
 
 function SingerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [activeKey, setActiveKey] = useState<string>("1");
   const { data: detailData, isLoading, isError } = useQuery(["singerDetail", id], () => getSingerDetail({ id }));
 
   const { artist, hotSongs } = detailData || {};
@@ -33,7 +38,7 @@ function SingerDetail() {
   }
 
   return (
-    <div className="flex flex-col w-heart--wrappe px-32">
+    <div className="singer-detail--wrapper flex flex-col w-heart--wrappe px-32">
       <Skeleton
         placeholder={
           <div className="flex py-6">
@@ -84,17 +89,34 @@ function SingerDetail() {
           </div>
         </div>
       </Skeleton>
-      <Tabs type="button">
-        <TabPane tab="热门歌曲" itemKey="1">
-          <SongListTable tableLoading={isLoading} dataSource={hotSongs} />
-        </TabPane>
-        <TabPane tab="所有专辑" itemKey="2">
-          🚧 WIP
-        </TabPane>
-        <TabPane tab="相关MV" itemKey="3">
-          🚧 WIP
-        </TabPane>
-      </Tabs>
+      <div className="my-4">
+        <span
+          className={classNames("nav-bar--tab", {
+            actived: activeKey === "1"
+          })}
+          onClick={() => setActiveKey("1")}
+        >
+          热门歌曲
+        </span>
+        <Divider layout="vertical" margin="12px" />
+        <span
+          className={classNames("nav-bar--tab", {
+            actived: activeKey === "2"
+          })}
+          onClick={() => setActiveKey("2")}
+        >
+          所有专辑
+        </span>
+        {/* <Divider layout="vertical" margin="12px" />
+        <span
+          className="py-2 px-3 rounded-sm text-gray-500 text-sm cursor-pointer
+         hover:bg-gray-100 hover:text-gray-900"
+        >
+          热门歌曲
+        </span> */}
+      </div>
+      {activeKey === "1" && <SongListTable tableLoading={isLoading} dataSource={hotSongs} />}
+      {activeKey === "2" && <SingerAlbum />}
     </div>
   );
 }

@@ -1,0 +1,10 @@
+.singer-detail--wrapper {
+  .nav-bar--tab {
+    @apply py-3 px-3 rounded-[3px] text-gray-500 text-sm cursor-pointer
+    hover:bg-gray-100 hover:text-gray-900;
+
+    &.actived {
+      @apply text-primary bg-gray-100 font-bold;
+    }
+  }
+}
