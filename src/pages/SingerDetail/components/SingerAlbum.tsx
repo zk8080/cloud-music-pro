@@ -5,8 +5,9 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSingerAlbumDetail } from "@/http/api";
 import { HotAlbum } from "@/types/singerDetail";
 import CoverImage from "@/components/CoverImage";
+import { format } from "date-fns";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 function SingerAlbum() {
   const { id } = useParams();
@@ -73,7 +74,7 @@ function SingerAlbum() {
         dataSource={albumList}
         loadMore={loadMore}
         renderItem={(item) => {
-          const { name, blurPicUrl, id } = item;
+          const { name, blurPicUrl, id, publishTime } = item;
           return (
             <List.Item className="mt-6">
               <Card
@@ -86,6 +87,7 @@ function SingerAlbum() {
                 <Title heading={5} ellipsis={{ showTooltip: true }}>
                   {name}
                 </Title>
+                {publishTime && <Text>{format(publishTime, "yyyy-MM-dd")}</Text>}
               </Card>
             </List.Item>
           );
