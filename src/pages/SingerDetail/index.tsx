@@ -1,5 +1,5 @@
 import SongListTable from "@/components/SongListTable";
-import { getSingerDetail } from "@/http/api";
+import { getSingerDesc, getSingerDetail } from "@/http/api";
 import { IconHeartStroked, IconShareStroked } from "@douyinfe/semi-icons";
 import { Skeleton, Button, Typography, TabPane, Tabs, Empty } from "@douyinfe/semi-ui";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,11 +7,14 @@ import { useQuery } from "@tanstack/react-query";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SingerAlbum from "./components/SingerAlbum";
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 function SingerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { data: descData, isLoading: descLoading } = useQuery(["singerDesc", id], () => getSingerDesc({ id }));
+
   const { data: detailData, isLoading, isError } = useQuery(["singerDetail", id], () => getSingerDetail({ id }));
 
   const { artist, hotSongs } = detailData || {};
@@ -43,12 +46,12 @@ function SingerDetail() {
             </div>
             <div className="flex-1 flex flex-col">
               <Skeleton.Title className="mb-2" />
-              {/* <Skeleton.Paragraph rows={3} /> */}
+              <Skeleton.Paragraph rows={3} />
               <Skeleton.Button className="mt-auto" />
             </div>
           </div>
         }
-        loading={isLoading}
+        loading={isLoading || descLoading}
         active
       >
         <div className="flex py-6">
@@ -61,16 +64,16 @@ function SingerDetail() {
           </div>
           <div className="flex flex-col">
             <Title heading={2}>{name}</Title>
-            {/* <Paragraph
+            <Paragraph
               ellipsis={{
                 rows: 4,
                 expandable: true,
                 collapsible: true
               }}
-              className="mt-4"
+              className="my-4"
             >
-              {"描述123"}
-            </Paragraph> */}
+              {descData?.briefDesc}
+            </Paragraph>
             <div className="mt-auto">
               <Button type="primary" theme="solid" size="large" className="mr-4">
                 播放热门歌曲

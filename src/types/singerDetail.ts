@@ -65,3 +65,8 @@ export interface HotAlbum {
   transNames?: string[];
   isSub?: boolean;
 }
+
+export interface SingerDescRes {
+  briefDesc?: string;
+  code?: number;
+}

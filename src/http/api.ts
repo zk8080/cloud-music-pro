@@ -1,6 +1,6 @@
 import { LoginRes, LoginStatusRes } from "@/types/layout";
 import { SingerlistRes } from "@/types/singer";
-import { SingerAlbumRes, SingerDetailRes } from "@/types/singerDetail";
+import { SingerAlbumRes, SingerDescRes, SingerDetailRes } from "@/types/singerDetail";
 import { SongListDetailRes } from "@/types/songList";
 import { CategoryListRes } from "./../types/category";
 import {
@@ -114,4 +114,9 @@ export const getSingerDetail = async (params: { id?: string }) => {
 // 获取歌手专辑
 export const getSingerAlbumDetail = async (params: { id?: string; limit?: number; offset?: number }) => {
   return await http.get<SingerAlbumRes>("/artist/album", { params });
+};
+
+// 获取歌手描述
+export const getSingerDesc = async (params: { id?: string }) => {
+  return await http.get<SingerDescRes>("/artist/desc", { params });
 };
