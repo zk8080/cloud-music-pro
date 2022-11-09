@@ -1,6 +1,6 @@
 import { logout } from "@/http/api";
 import { loginInfoState, loginVisibleState } from "@/recoil/layout";
-import { IconMoon, IconPulse, IconSun } from "@douyinfe/semi-icons";
+import { IconGithubLogo, IconMoon, IconPulse, IconSun } from "@douyinfe/semi-icons";
 import { Avatar, Button, Card, Nav, Popover, Tooltip, Typography } from "@douyinfe/semi-ui";
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -74,6 +74,14 @@ function NavBar() {
               <IconMoon className="text-3xl cursor-pointer" size="inherit" onClick={switchMode} />
             </Tooltip>
           )}
+          <Tooltip content="查看GitHub">
+            <IconGithubLogo
+              className="text-3xl cursor-pointer ml-4"
+              onClick={() => {
+                window.open("https://github.com/zk8080/cloud-music-pro");
+              }}
+            />
+          </Tooltip>
           {userId ? (
             <Popover
               content={
@@ -97,7 +105,7 @@ function NavBar() {
                 </Card>
               }
             >
-              <Avatar size="small" className="ml-3 cursor-pointer" color="red" src={avatarUrl}></Avatar>
+              <Avatar size="small" className="ml-4 cursor-pointer" color="red" src={avatarUrl}></Avatar>
             </Popover>
           ) : (
             <Button
