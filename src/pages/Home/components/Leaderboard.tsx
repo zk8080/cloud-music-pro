@@ -3,10 +3,12 @@ import { List, Song } from "@/types/home";
 import { Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useQuery } from "@tanstack/react-query";
 import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 function Leaderboard() {
+  const navigate = useNavigate();
   const query = useQuery(["topList"], getToplist);
 
   const topList = query.data?.list?.slice(0, 4) || [];
@@ -82,7 +84,11 @@ function Leaderboard() {
                         <Text className="ml-3 mr-4" ellipsis={{ showTooltip: true }}>
                           {track.name}
                         </Text>
-                        <Text className="ml-auto" ellipsis={{ showTooltip: true }}>
+                        <Text
+                          className="ml-auto"
+                          ellipsis={{ showTooltip: true }}
+                          onClick={() => navigate(`/singerDetail/${track.ar?.[0]?.id}`)}
+                        >
                           {track.ar?.[0]?.name}
                         </Text>
                       </li>

@@ -3,10 +3,13 @@ import { chunk } from "@/utils";
 import { Carousel, Skeleton, Typography } from "@douyinfe/semi-ui";
 import SongCard from "@/components/SongCard";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 function PersonalizedNewSong() {
+  const navigate = useNavigate();
+
   const { data: personalizedList = [], isLoading } = useQuery(
     ["PersonalizedNewSong"],
     () => getPersonalizedNewSong({ limit: 20 }),
@@ -60,13 +63,22 @@ function PersonalizedNewSong() {
                         artists: []
                       }
                     } = childItem || {};
+                    const { artists } = song || {};
                     return (
                       <SongCard
                         key={id}
                         coverImgUrl={picUrl}
                         songName={name}
-                        artistsName={song?.artists && song?.artists[0]?.name}
-                        artistsId={song?.artists && song?.artists[0]?.id}
+                        textRender={
+                          artists && artists[0]?.id ? (
+                            <Text
+                              className="hover:text-primary cursor-pointer"
+                              onClick={() => navigate(`/singerDetail/${artists[0]?.id}`)}
+                            >
+                              {artists[0]?.name}
+                            </Text>
+                          ) : null
+                        }
                       />
                     );
                   })}

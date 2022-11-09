@@ -1,20 +1,20 @@
 import { memo, useState, useEffect } from "react";
-import { Button, Card, List, Skeleton, Typography } from "@douyinfe/semi-ui";
+import { Button, List, Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSingerAlbumDetail } from "@/http/api";
 import { HotAlbum } from "@/types/singerDetail";
-import CoverImage from "@/components/CoverImage";
 import { format } from "date-fns";
+import SongCard from "@/components/SongCard";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 function SingerAlbum() {
   const { id } = useParams();
   const [albumList, setAlbumList] = useState<HotAlbum[]>([]);
 
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
-    ["123456", id],
+    ["singerAlbum", id],
     async (obj) => {
       const res = await getSingerAlbumDetail({ id, limit: 30, offset: obj.pageParam });
       return res;
@@ -77,18 +77,12 @@ function SingerAlbum() {
           const { name, blurPicUrl, id, publishTime } = item;
           return (
             <List.Item className="mt-6">
-              <Card
+              <SongCard
                 key={id}
-                className="w-56 dark:bg-zinc-800"
-                shadows="always"
-                bordered={false}
-                cover={<CoverImage src={`${blurPicUrl}?param=224y224`} />}
-              >
-                <Title heading={5} ellipsis={{ showTooltip: true }}>
-                  {name}
-                </Title>
-                {publishTime && <Text>{format(publishTime, "yyyy-MM-dd")}</Text>}
-              </Card>
+                coverImgUrl={blurPicUrl}
+                songName={name}
+                textRender={publishTime ? <Text>{format(publishTime, "yyyy-MM-dd")}</Text> : null}
+              />
             </List.Item>
           );
         }}
