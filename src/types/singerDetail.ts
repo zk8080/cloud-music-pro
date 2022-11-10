@@ -70,3 +70,24 @@ export interface SingerDescRes {
   briefDesc?: string;
   code?: number;
 }
+
+export interface RelatedMVRes {
+  mvs?: Mv[];
+  time?: number;
+  hasMore?: boolean;
+  code?: number;
+}
+
+export interface Mv {
+  id?: number;
+  name?: string;
+  status?: number;
+  artistName?: string;
+  imgurl16v9?: string;
+  imgurl?: string;
+  artist?: Artist;
+  duration?: number;
+  playCount?: number;
+  publishTime?: Date;
+  subed?: boolean;
+}

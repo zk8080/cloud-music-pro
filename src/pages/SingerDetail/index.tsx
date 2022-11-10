@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SingerAlbum from "./components/SingerAlbum";
+import RelatedMV from "./components/RelatedMV";
 
 const { Title, Paragraph } = Typography;
 
@@ -17,7 +18,7 @@ function SingerDetail() {
 
   const { artist, hotSongs } = detailData || {};
 
-  const { picUrl, name, albumSize, briefDesc } = artist || {};
+  const { picUrl, name, albumSize, briefDesc, mvSize } = artist || {};
 
   if (isError) {
     return (
@@ -94,6 +95,9 @@ function SingerDetail() {
         </TabPane>
         <TabPane tab={`所有专辑${albumSize || 0}`} itemKey="2" className="overflow-visible">
           <SingerAlbum />
+        </TabPane>
+        <TabPane tab={`相关MV${mvSize || 0}`} itemKey="3" className="overflow-visible">
+          <RelatedMV />
         </TabPane>
       </Tabs>
     </div>

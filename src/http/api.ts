@@ -1,3 +1,4 @@
+import { RelatedMVRes } from "./../types/singerDetail";
 import { LoginRes, LoginStatusRes } from "@/types/layout";
 import { SingerlistRes } from "@/types/singer";
 import { SingerAlbumRes, SingerDescRes, SingerDetailRes } from "@/types/singerDetail";
@@ -119,4 +120,9 @@ export const getSingerAlbumDetail = async (params: { id?: string; limit?: number
 // 获取歌手描述
 export const getSingerDesc = async (params: { id?: string }) => {
   return await http.get<SingerDescRes>("/artist/desc", { params });
+};
+
+// 获取歌手MV
+export const getSingerMV = async (params: { id?: string; limit?: number; offset?: number }) => {
+  return await http.get<RelatedMVRes>("/artist/mv", { params });
 };
