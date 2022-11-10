@@ -1,5 +1,5 @@
 import SongListTable from "@/components/SongListTable";
-import { getSingerDesc, getSingerDetail } from "@/http/api";
+import { getSingerDetail } from "@/http/api";
 import { IconHeartStroked, IconShareStroked } from "@douyinfe/semi-icons";
 import { Skeleton, Button, Typography, TabPane, Tabs, Empty } from "@douyinfe/semi-ui";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,13 +13,11 @@ function SingerDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: descData, isLoading: descLoading } = useQuery(["singerDesc", id], () => getSingerDesc({ id }));
-
   const { data: detailData, isLoading, isError } = useQuery(["singerDetail", id], () => getSingerDetail({ id }));
 
   const { artist, hotSongs } = detailData || {};
 
-  const { picUrl, name, albumSize } = artist || {};
+  const { picUrl, name, albumSize, briefDesc } = artist || {};
 
   if (isError) {
     return (
@@ -51,7 +49,7 @@ function SingerDetail() {
             </div>
           </div>
         }
-        loading={isLoading || descLoading}
+        loading={isLoading}
         active
       >
         <div className="flex py-6">
@@ -64,16 +62,18 @@ function SingerDetail() {
           </div>
           <div className="flex flex-col">
             <Title heading={2}>{name}</Title>
-            <Paragraph
-              ellipsis={{
-                rows: 4,
-                expandable: true,
-                collapsible: true
-              }}
-              className="my-4"
-            >
-              {descData?.briefDesc}
-            </Paragraph>
+            {briefDesc && (
+              <Paragraph
+                ellipsis={{
+                  rows: 4,
+                  expandable: true,
+                  collapsible: true
+                }}
+                className="my-4"
+              >
+                {briefDesc}
+              </Paragraph>
+            )}
             <div className="mt-auto">
               <Button type="primary" theme="solid" size="large" className="mr-4">
                 播放热门歌曲

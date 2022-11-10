@@ -2,7 +2,7 @@ import { getPlaylistTrackList, getToplist } from "@/http/api";
 import { List, Song } from "@/types/home";
 import { Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useQuery } from "@tanstack/react-query";
-import classNames from "classnames";
+import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
@@ -17,7 +17,7 @@ function Leaderboard() {
   const getTopDetail = async (topList: List[]) => {
     const res = await Promise.all(
       topList.map((item) => {
-        return getPlaylistTrackList({ id: item.id!, limit: 10 });
+        return getPlaylistTrackList({ id: item.id!, limit: 5 });
       })
     );
     const tmpMap: Record<number, Song[]> = {};
@@ -45,10 +45,10 @@ function Leaderboard() {
       <Skeleton
         placeholder={
           <div className="w-heart--wrapper flex mt-5 px-32 justify-between">
-            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
-            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
-            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
-            <Skeleton.Image className="w-24/100 h-112 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-96 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-96 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-96 rounded-md" />
+            <Skeleton.Image className="w-24/100 h-96 rounded-md" />
           </div>
         }
         loading={isLoading}
@@ -58,7 +58,7 @@ function Leaderboard() {
           {topList.map((item) => {
             return (
               <div
-                className="flex flex-col w-24/100 h-112 py-4 shadow-2xl rounded-md"
+                className="flex flex-col w-24/100 h-96 py-4 shadow-2xl rounded-md"
                 key={item.id}
                 style={{
                   backgroundImage: `url(${item.coverImgUrl}?imageView&param=100y100&blur=40x20)`
@@ -70,27 +70,27 @@ function Leaderboard() {
                 <ul className="h-full flex flex-col justify-between mt-2">
                   {topDetailMap?.[item.id!]?.map((track, index) => {
                     return (
-                      <li
-                        key={track.id}
-                        className="top-detail--item flex items-center px-5 cursor-pointer text-white text-xl"
-                      >
-                        <span
-                          className={classNames("italic", {
-                            "font-bold": index + 1 < 4
-                          })}
-                        >
-                          {index + 1}.
+                      <li key={track.id} className="top-detail--item flex px-5 cursor-pointer text-white text-xl">
+                        <span className="italic font-bold">{index + 1}.</span>
+                        <span className="flex flex-col ml-3">
+                          <Text ellipsis={{ showTooltip: true }}>{track.name}</Text>
+                          <Text ellipsis={{ showTooltip: true }}>
+                            {track.ar?.map((item, idx) => {
+                              const { id, name } = item || {};
+                              return (
+                                <Fragment key={id}>
+                                  {idx > 0 && " / "}
+                                  <span
+                                    className="cursor-pointer hover:text-primary"
+                                    onClick={() => navigate(`/singerDetail/${id}`)}
+                                  >
+                                    {name}
+                                  </span>
+                                </Fragment>
+                              );
+                            })}
+                          </Text>
                         </span>
-                        <Text className="ml-3 mr-4" ellipsis={{ showTooltip: true }}>
-                          {track.name}
-                        </Text>
-                        <Text
-                          className="ml-auto"
-                          ellipsis={{ showTooltip: true }}
-                          onClick={() => navigate(`/singerDetail/${track.ar?.[0]?.id}`)}
-                        >
-                          {track.ar?.[0]?.name}
-                        </Text>
                       </li>
                     );
                   })}
