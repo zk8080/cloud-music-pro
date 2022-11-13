@@ -36,7 +36,7 @@ function SingerDetail() {
   }
 
   return (
-    <div className="flex flex-col w-heart--wrappe px-32">
+    <div className="flex flex-col w-heart--wrapper px-32">
       <Skeleton
         placeholder={
           <div className="flex py-6">

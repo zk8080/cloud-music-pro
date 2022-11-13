@@ -49,7 +49,7 @@ function NavBar() {
   return (
     <Nav
       mode={"horizontal"}
-      className="cloud-layout--navbar px-32 shrink-0"
+      className="cloud-layout--navbar shrink-0"
       selectedKeys={selectKeys}
       items={[
         { itemKey: "/", text: "首页" },

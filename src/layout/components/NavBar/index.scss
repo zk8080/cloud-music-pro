@@ -1,4 +1,8 @@
 .cloud-layout--navbar {
+  .semi-navigation-inner {
+    @apply max-w-heart mx-auto  px-32;
+  }
+
   .semi-navigation-list .semi-navigation-item-selected {
     background-color: var(--semi-color-primary-light-default) !important;
   }

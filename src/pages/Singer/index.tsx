@@ -59,7 +59,7 @@ function Singer() {
       <Skeleton
         placeholder={
           <div className="px-32 flex items-center justify-between flex-wrap mt-6">
-            {Array.from({ length: 10 }, (v, i) => i).map((item) => (
+            {Array.from({ length: 30 }, (v, i) => i).map((item) => (
               <div
                 key={item}
                 className="w-56 h-64 flex flex-col items-center justify-center mb-5 rounded-md bg-zinc-100 dark:bg-zinc-800"
