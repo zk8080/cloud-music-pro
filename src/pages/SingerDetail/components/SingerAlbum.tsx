@@ -1,11 +1,12 @@
 import { memo, useState, useEffect } from "react";
-import { Button, List, Skeleton, Typography } from "@douyinfe/semi-ui";
+import { Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSingerAlbumDetail } from "@/http/api";
 import { HotAlbum } from "@/types/singerDetail";
 import { format } from "date-fns";
 import SongCard from "@/components/SongCard";
+import InfinitLoadList from "@/components/InfinitLoadList";
 
 const { Text } = Typography;
 
@@ -37,21 +38,6 @@ function SingerAlbum() {
     }
   }, [data?.pages]);
 
-  const loadMore = hasNextPage ? (
-    <div className="text-center mt-5">
-      <Button
-        onClick={() => {
-          fetchNextPage();
-        }}
-        type="primary"
-        theme="solid"
-        loading={isFetchingNextPage}
-      >
-        显示更多
-      </Button>
-    </div>
-  ) : null;
-
   return (
     <Skeleton
       placeholder={
@@ -64,26 +50,22 @@ function SingerAlbum() {
       loading={isLoading}
       active
     >
-      <List
-        grid={{
-          gutter: 16,
-          span: 5 / 24
+      <InfinitLoadList<HotAlbum>
+        dataList={albumList}
+        hasMore={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onLoadMore={() => {
+          fetchNextPage();
         }}
-        className="w-heart--wrapper"
-        layout="horizontal"
-        dataSource={albumList}
-        loadMore={loadMore}
         renderItem={(item) => {
           const { name, blurPicUrl, id, publishTime } = item;
           return (
-            <List.Item className="mt-6">
-              <SongCard
-                key={id}
-                coverImgUrl={blurPicUrl}
-                songName={name}
-                textRender={publishTime ? <Text>{format(publishTime, "yyyy-MM-dd")}</Text> : null}
-              />
-            </List.Item>
+            <SongCard
+              key={id}
+              coverImgUrl={blurPicUrl}
+              songName={name}
+              textRender={publishTime ? <Text>{format(publishTime, "yyyy-MM-dd")}</Text> : null}
+            />
           );
         }}
       />

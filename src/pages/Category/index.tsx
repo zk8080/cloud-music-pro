@@ -4,13 +4,16 @@ import { IconClose } from "@douyinfe/semi-icons";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import CategoryTagList from "./components/CategoryTagList";
-import PlayerList from "./components/PlayerList";
 import "./index.scss";
 import { Skeleton } from "@douyinfe/semi-ui";
+import InfinitLoadList from "@/components/InfinitLoadList";
+import SongCard from "@/components/SongCard";
+import { useNavigate } from "react-router-dom";
 
 const initialCat = "全部";
 
 function Category() {
+  const navigate = useNavigate();
   const [curCategory, setCurCategory] = useState<string>(initialCat);
   const [playList, setPlayList] = useState<Playlist[]>([]);
 
@@ -109,12 +112,20 @@ function Category() {
         loading={isLoading}
         active
       >
-        <PlayerList
-          playList={playList}
+        <InfinitLoadList<Playlist>
+          className="px-32"
+          dataList={playList}
           hasMore={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           onLoadMore={() => {
             fetchNextPage();
+          }}
+          onItemClick={(item) => {
+            navigate(`/songList/${item?.id}`);
+          }}
+          renderItem={(item) => {
+            const { name, coverImgUrl } = item;
+            return <SongCard songName={name} coverImgUrl={coverImgUrl} />;
           }}
         />
       </Skeleton>

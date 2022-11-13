@@ -1,14 +1,18 @@
+import InfinitLoadList from "@/components/InfinitLoadList";
 import { getSingerlistByTag } from "@/http/api";
 import { Artist } from "@/types/home";
 import { SearchInfoType } from "@/types/singer";
-import { Skeleton } from "@douyinfe/semi-ui";
+import { Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import SingerCategory from "./components/SingerCategory";
-import SingerList from "./components/SingerList";
 import "./index.scss";
+import { useNavigate } from "react-router-dom";
+
+const { Title } = Typography;
 
 function Singer() {
+  const navigate = useNavigate();
   const [searchInfo, setSearchInfo] = useState<SearchInfoType>({
     initial: undefined,
     type: "-1",
@@ -69,12 +73,33 @@ function Singer() {
         loading={isLoading}
         active
       >
-        <SingerList
-          singerList={singerList}
+        <InfinitLoadList<Artist>
+          className="px-32"
+          dataList={singerList}
           hasMore={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           onLoadMore={() => {
             fetchNextPage();
+          }}
+          onItemClick={(item) => {
+            navigate(`/singerDetail/${item?.id}`);
+          }}
+          renderItem={(item) => {
+            const { name, picUrl } = item;
+            return (
+              <div className=" flex flex-col w-56 h-64 items-center justify-center rounded-md bg-zinc-100 dark:bg-zinc-800">
+                <div className="group w-44 h-44 rounded-full mb-5 cursor-pointer overflow-hidden">
+                  <img
+                    className="rounded-full w-full h-full group-hover:scale-125 transition duration-500 ease-in-out"
+                    src={`${picUrl}?param=160y160`}
+                    alt=""
+                  />
+                </div>
+                <Title heading={5} ellipsis={{ showTooltip: true }}>
+                  {name}
+                </Title>
+              </div>
+            );
           }}
         />
       </Skeleton>

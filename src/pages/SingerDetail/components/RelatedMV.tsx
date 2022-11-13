@@ -1,10 +1,11 @@
 import { memo, useState, useEffect } from "react";
-import { Button, List, Skeleton } from "@douyinfe/semi-ui";
+import { Skeleton } from "@douyinfe/semi-ui";
 import { useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSingerMV } from "@/http/api";
 import { Mv } from "@/types/singerDetail";
 import SongCard from "@/components/SongCard";
+import InfinitLoadList from "@/components/InfinitLoadList";
 
 function RelatedMV() {
   const { id } = useParams();
@@ -34,21 +35,6 @@ function RelatedMV() {
     }
   }, [data?.pages]);
 
-  const loadMore = hasNextPage ? (
-    <div className="text-center mt-5">
-      <Button
-        onClick={() => {
-          fetchNextPage();
-        }}
-        type="primary"
-        theme="solid"
-        loading={isFetchingNextPage}
-      >
-        显示更多
-      </Button>
-    </div>
-  ) : null;
-
   return (
     <Skeleton
       placeholder={
@@ -61,22 +47,16 @@ function RelatedMV() {
       loading={isLoading}
       active
     >
-      <List
-        grid={{
-          gutter: 16,
-          span: 5 / 24
+      <InfinitLoadList<Mv>
+        dataList={mvList}
+        hasMore={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onLoadMore={() => {
+          fetchNextPage();
         }}
-        className="w-heart--wrapper"
-        layout="horizontal"
-        dataSource={mvList}
-        loadMore={loadMore}
         renderItem={(item) => {
           const { name, imgurl, id } = item;
-          return (
-            <List.Item className="mt-6">
-              <SongCard key={id} coverImgUrl={imgurl} songName={name} />
-            </List.Item>
-          );
+          return <SongCard key={id} coverImgUrl={imgurl} songName={name} />;
         }}
       />
     </Skeleton>
