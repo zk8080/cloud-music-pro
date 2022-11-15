@@ -51,9 +51,17 @@ function SongListTable(props: ISongListTableProps) {
     {
       title: "专辑",
       dataIndex: "album",
-      width: 200,
+      width: 300,
       render: (text, record) => {
-        return record?.al?.name || "--";
+        const { id, name } = record?.al || {};
+        if (id) {
+          return (
+            <a className="cursor-pointer hover:text-primary" onClick={() => navigate(`/albumDetail/${id}`)}>
+              《{name}》
+            </a>
+          );
+        }
+        return "--";
       }
     },
     {

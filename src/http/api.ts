@@ -14,6 +14,7 @@ import {
   ToplistRes
 } from "./../types/home";
 import { http } from "./request";
+import { AlbumDetailRes } from "@/types/albumDetail";
 
 // 获取PC轮播图
 export const getBanner = async () => {
@@ -125,4 +126,9 @@ export const getSingerDesc = async (params: { id?: string }) => {
 // 获取歌手MV
 export const getSingerMV = async (params: { id?: string; limit?: number; offset?: number }) => {
   return await http.get<RelatedMVRes>("/artist/mv", { params });
+};
+
+// 获取专辑详情
+export const getAlbumDetail = async (params: { id?: string }) => {
+  return await http.get<AlbumDetailRes>("/album", { params });
 };

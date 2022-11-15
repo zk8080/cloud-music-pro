@@ -1,6 +1,6 @@
 import { memo, useState, useEffect } from "react";
 import { Skeleton, Typography } from "@douyinfe/semi-ui";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSingerAlbumDetail } from "@/http/api";
 import { HotAlbum } from "@/types/singerDetail";
@@ -12,6 +12,7 @@ const { Text } = Typography;
 
 function SingerAlbum() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [albumList, setAlbumList] = useState<HotAlbum[]>([]);
 
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteQuery(
@@ -56,6 +57,9 @@ function SingerAlbum() {
         isFetchingNextPage={isFetchingNextPage}
         onLoadMore={() => {
           fetchNextPage();
+        }}
+        onItemClick={(item) => {
+          navigate(`/albumDetail/${item?.id}`);
         }}
         renderItem={(item) => {
           const { name, blurPicUrl, id, publishTime } = item;
