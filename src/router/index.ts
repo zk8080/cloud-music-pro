@@ -5,6 +5,7 @@ import Singer from "@/pages/Singer";
 import SongList from "@/pages/SongList";
 import SingerDetail from "@/pages/SingerDetail";
 import AlbumDetail from "@/pages/AlbumDetail";
+import Player from "@/pages/Player";
 
 export const routes = [
   {
@@ -34,6 +35,10 @@ export const routes = [
       {
         path: "albumDetail/:id",
         component: AlbumDetail
+      },
+      {
+        path: "player",
+        component: Player
       }
     ]
   }

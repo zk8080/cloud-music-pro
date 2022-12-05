@@ -1,5 +1,5 @@
 import { BackTop, Layout } from "@douyinfe/semi-ui";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { IconArrowUp } from "@douyinfe/semi-icons";
 import "./index.scss";
@@ -14,6 +14,7 @@ import { getLoginInfo } from "@/http/api";
 const { Header, Footer, Content } = Layout;
 
 function MyLayout() {
+  const { pathname } = useLocation();
   const [showLogin, setShowLogin] = useRecoilState(loginVisibleState);
   const setLoginInfo = useSetRecoilState(loginInfoState);
   const toggle = useCallback(() => {
@@ -30,6 +31,7 @@ function MyLayout() {
     }
   });
 
+  console.log(pathname, "--pathname--");
   return (
     <Layout className="cloud-music--layout pt-[60px]">
       <Header className="fixed top-0 z-50 w-full backdrop-blur">
@@ -38,9 +40,11 @@ function MyLayout() {
       <Content>
         <Outlet></Outlet>
       </Content>
-      <Footer>
-        <MyFooter />
-      </Footer>
+      {pathname !== "/player" && (
+        <Footer>
+          <MyFooter />
+        </Footer>
+      )}
       <BackTop>
         <IconArrowUp />
       </BackTop>
