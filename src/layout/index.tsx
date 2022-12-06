@@ -45,7 +45,7 @@ function MyLayout() {
           <MyFooter />
         </Footer>
       )}
-      <BackTop>
+      <BackTop style={{ bottom: 100 }}>
         <IconArrowUp />
       </BackTop>
       <Login visible={showLogin} onClose={toggle} />

@@ -6,6 +6,7 @@ import { getAlbumDetail } from "@/http/api";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SongListTable from "@/components/SongListTable";
 import { format } from "date-fns";
+import { Song } from "@/types/home";
 
 const { Title, Paragraph } = Typography;
 
@@ -93,7 +94,7 @@ function AlbumDetail() {
       </Skeleton>
 
       <Title heading={3}>全部歌曲</Title>
-      <SongListTable tableLoading={isLoading} dataSource={songs} />
+      <SongListTable<Song> tableLoading={isLoading} dataSource={songs} />
     </div>
   );
 }

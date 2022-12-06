@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SingerAlbum from "./components/SingerAlbum";
 import RelatedMV from "./components/RelatedMV";
+import { Song } from "@/types/home";
 
 const { Title, Paragraph } = Typography;
 
@@ -91,7 +92,7 @@ function SingerDetail() {
       </Skeleton>
       <Tabs type="button" lazyRender={true}>
         <TabPane tab={`热门歌曲${hotSongs?.length || 0}`} itemKey="1" className="overflow-visible">
-          <SongListTable tableLoading={isLoading} dataSource={hotSongs} />
+          <SongListTable<Song> tableLoading={isLoading} dataSource={hotSongs} />
         </TabPane>
         <TabPane tab={`所有专辑${albumSize || 0}`} itemKey="2" className="overflow-visible">
           <SingerAlbum />

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getPlaylistTrackList, getSongListDetail } from "@/http/api";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SongListTable from "@/components/SongListTable";
+import { Song } from "@/types/home";
 
 const { Title, Paragraph } = Typography;
 
@@ -104,7 +105,7 @@ function SongList() {
       </Skeleton>
 
       <Title heading={3}>全部歌曲</Title>
-      <SongListTable tableLoading={listLoading} dataSource={listData} />
+      <SongListTable<Song> tableLoading={listLoading} dataSource={listData} />
     </div>
   );
 }
