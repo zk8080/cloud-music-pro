@@ -31,7 +31,6 @@ function MyLayout() {
     }
   });
 
-  console.log(pathname, "--pathname--");
   return (
     <Layout className="cloud-music--layout pt-[60px]">
       <Header className="fixed top-0 z-50 w-full backdrop-blur">

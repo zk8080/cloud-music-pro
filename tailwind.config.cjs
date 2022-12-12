@@ -21,6 +21,9 @@ module.exports = {
       },
       maxWidth: {
         'heart': '1440px'
+      },
+      animation: {
+        'spin-slow': 'spin 2s linear infinite',
       }
     },
   },

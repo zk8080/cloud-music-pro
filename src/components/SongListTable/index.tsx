@@ -1,6 +1,6 @@
 import { Song } from "@/types/home";
 import { formatPlayTime } from "@/utils";
-import { IconPlayCircle, IconHeartStroked, IconShareStroked } from "@douyinfe/semi-icons";
+import { IconPlayCircle, IconHeartStroked, IconShareStroked, IconMusic } from "@douyinfe/semi-icons";
 import { Table } from "@douyinfe/semi-ui";
 import { ColumnProps, TableProps } from "@douyinfe/semi-ui/lib/es/table";
 import { useState } from "react";
@@ -10,21 +10,28 @@ import "./index.scss";
 interface ISongListTableProps<T extends Record<string, any> = any> extends TableProps<T> {
   dataSource?: T[];
   tableLoading?: boolean;
+  onPlayClick?: (item: T) => void;
+  curPlayId?: number;
 }
 
 function SongListTable<T extends Record<string, any> = any>(props: ISongListTableProps<T>) {
-  const { dataSource, tableLoading, ...restProps } = props || {};
+  const { dataSource, tableLoading, onPlayClick, curPlayId, ...restProps } = props || {};
 
   const navigate = useNavigate();
 
   const [curMouseId, setCurMouseId] = useState<number>();
 
-  const columns: ColumnProps<Song>[] = [
+  const columns: ColumnProps<T>[] = [
     {
       title: "序号",
       dataIndex: "sort",
       width: "10%",
-      render: (text, record, index) => index + 1
+      render: (text, record, index) => {
+        if (record?.id === curPlayId) {
+          return <IconMusic className="animate-spin-slow" />;
+        }
+        return index + 1;
+      }
     },
     {
       title: "歌曲",
@@ -35,7 +42,7 @@ function SongListTable<T extends Record<string, any> = any>(props: ISongListTabl
       title: "歌手",
       dataIndex: "singer",
       render: (text, record) => {
-        return record?.ar?.map((item, index) => {
+        return record?.ar?.map((item: any, index: number) => {
           const { id, name } = item || {};
           return (
             <span key={id}>
@@ -74,7 +81,7 @@ function SongListTable<T extends Record<string, any> = any>(props: ISongListTabl
         if (curMouseId && curMouseId === record.id) {
           return (
             <div className="song-duration--operation flex justify-between">
-              <IconPlayCircle className="cursor-pointer" size="large" />
+              <IconPlayCircle className="cursor-pointer" size="large" onClick={() => onPlayClick?.(record)} />
               <IconHeartStroked className="cursor-pointer" size="large" />
               <IconShareStroked className="cursor-pointer" size="large" />
             </div>
@@ -100,7 +107,8 @@ function SongListTable<T extends Record<string, any> = any>(props: ISongListTabl
           }, // 鼠标移入行
           onMouseLeave: () => {
             setCurMouseId(undefined);
-          } // 鼠标移出行
+          }, // 鼠标移出行
+          className: record?.id === curPlayId ? "text-primary" : undefined
         };
       }}
     />
