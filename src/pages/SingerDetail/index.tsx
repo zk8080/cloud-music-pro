@@ -8,6 +8,7 @@ import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-i
 import SingerAlbum from "./components/SingerAlbum";
 import RelatedMV from "./components/RelatedMV";
 import { Song } from "@/types/home";
+import { handlePlayer } from "@/utils";
 
 const { Title, Paragraph } = Typography;
 
@@ -77,7 +78,13 @@ function SingerDetail() {
               </Paragraph>
             )}
             <div className="mt-auto">
-              <Button type="primary" theme="solid" size="large" className="mr-4">
+              <Button
+                type="primary"
+                theme="solid"
+                size="large"
+                className="mr-4"
+                onClick={() => handlePlayer(hotSongs?.map((item) => item.id!) || [])}
+              >
                 播放热门歌曲
               </Button>
               <Button type="tertiary" theme="solid" size="large" icon={<IconHeartStroked />} className="mr-4">
@@ -92,7 +99,11 @@ function SingerDetail() {
       </Skeleton>
       <Tabs type="button" lazyRender={true}>
         <TabPane tab={`热门歌曲${hotSongs?.length || 0}`} itemKey="1" className="overflow-visible">
-          <SongListTable<Song> tableLoading={isLoading} dataSource={hotSongs} />
+          <SongListTable<Song>
+            tableLoading={isLoading}
+            dataSource={hotSongs}
+            onPlayClick={(item) => handlePlayer(item.id!)}
+          />
         </TabPane>
         <TabPane tab={`所有专辑${albumSize || 0}`} itemKey="2" className="overflow-visible">
           <SingerAlbum />

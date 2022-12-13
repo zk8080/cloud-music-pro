@@ -74,7 +74,7 @@ function Login(props: IProps) {
           layout="vertical"
           labelPosition="inset"
           className="w-96 flex flex-col px-5 justify-center relative"
-          onSubmit={(values) => loginMutation.mutate(values)}
+          onSubmit={(values: any) => loginMutation.mutate(values)}
         >
           {({ formApi }) => (
             <>

@@ -15,6 +15,7 @@ import {
 } from "./../types/home";
 import { http } from "./request";
 import { AlbumDetailRes } from "@/types/albumDetail";
+import { SongDetailRes } from "@/types/player";
 
 // 获取PC轮播图
 export const getBanner = async () => {
@@ -131,4 +132,9 @@ export const getSingerMV = async (params: { id?: string; limit?: number; offset?
 // 获取专辑详情
 export const getAlbumDetail = async (params: { id?: string }) => {
   return await http.get<AlbumDetailRes>("/album", { params });
+};
+
+// 获取歌曲详情
+export const getSongDetail = async (params: { ids?: string }) => {
+  return await http.get<SongDetailRes>("/song/detail", { params });
 };

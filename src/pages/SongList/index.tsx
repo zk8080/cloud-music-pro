@@ -6,6 +6,7 @@ import { getPlaylistTrackList, getSongListDetail } from "@/http/api";
 import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-illustrations";
 import SongListTable from "@/components/SongListTable";
 import { Song } from "@/types/home";
+import { handlePlayer } from "@/utils";
 
 const { Title, Paragraph } = Typography;
 
@@ -90,7 +91,13 @@ function SongList() {
               ))}
             </div>
             <div className="mt-auto">
-              <Button type="primary" theme="solid" size="large" className="mr-4">
+              <Button
+                type="primary"
+                theme="solid"
+                size="large"
+                className="mr-4"
+                onClick={() => handlePlayer(listData?.map((item) => item.id!) || [])}
+              >
                 播放全部
               </Button>
               <Button type="tertiary" theme="solid" size="large" icon={<IconHeartStroked />} className="mr-4">
@@ -105,7 +112,11 @@ function SongList() {
       </Skeleton>
 
       <Title heading={3}>全部歌曲</Title>
-      <SongListTable<Song> tableLoading={listLoading} dataSource={listData} />
+      <SongListTable<Song>
+        tableLoading={listLoading}
+        dataSource={listData}
+        onPlayClick={(item) => handlePlayer(item.id!)}
+      />
     </div>
   );
 }

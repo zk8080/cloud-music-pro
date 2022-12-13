@@ -50,11 +50,7 @@ export interface PersonalizedItem {
   playCount?: number;
   trackCount?: number;
   highQuality?: boolean;
-  alg?: Alg;
-}
-
-export enum Alg {
-  AlgHighQuality = "alg_high_quality"
+  alg?: string;
 }
 
 // 新碟上架返回值
@@ -73,11 +69,7 @@ export interface PersonalizedNewSongItem {
   canDislike?: boolean;
   trackNumberUpdateTime?: null;
   song?: Song;
-  alg?: Alg;
-}
-
-export enum Alg {
-  HotServer = "hot_server"
+  alg?: string;
 }
 
 export interface Song {
@@ -88,7 +80,7 @@ export interface Song {
   status?: number;
   fee?: number;
   copyrightId?: number;
-  disc?: Disc;
+  disc?: string;
   no?: number;
   artists?: Artist[];
   ar?: Artist[];
@@ -135,7 +127,7 @@ export interface Song {
 export interface Album {
   name?: string;
   id?: number;
-  type?: Type;
+  type?: string;
   size?: number;
   picId?: number;
   blurPicUrl?: string;
@@ -154,7 +146,7 @@ export interface Album {
   copyrightId?: number;
   commentThreadId?: string;
   artists?: Artist[];
-  subType?: SubType;
+  subType?: string;
   transName?: null;
   onSale?: boolean;
   mark?: number;
@@ -183,36 +175,16 @@ export interface Artist {
   transNames?: string[];
 }
 
-export enum SubType {
-  Demo = "DEMO",
-  录音室版 = "录音室版"
-}
-
-export enum Type {
-  Single = "Single",
-  专辑 = "专辑"
-}
-
 export interface Music {
   name?: null;
   id?: number;
   size?: number;
-  extension?: Extension;
+  extension?: string;
   sr?: number;
   dfsId?: number;
   bitrate?: number;
   playTime?: number;
   volumeDelta?: number;
-}
-
-export enum Extension {
-  FLAC = "flac",
-  Mp3 = "mp3"
-}
-
-export enum Disc {
-  The01 = "01",
-  The1致天堂的信LettersToHeaven = "1 致天堂的信 Letters to Heaven"
 }
 
 export interface Privilege {
@@ -233,12 +205,12 @@ export interface Privilege {
   preSell?: boolean;
   playMaxbr?: number;
   downloadMaxbr?: number;
-  maxBrLevel?: MaxBrLevel;
-  playMaxBrLevel?: MaxBrLevel;
-  downloadMaxBrLevel?: MaxBrLevel;
-  plLevel?: LLevel;
-  dlLevel?: DLLevel;
-  flLevel?: LLevel;
+  maxBrLevel?: string;
+  playMaxBrLevel?: string;
+  downloadMaxBrLevel?: string;
+  plLevel?: string;
+  dlLevel?: string;
+  flLevel?: string;
   rscl?: null;
   freeTrialPrivilege?: FreeTrialPrivilege;
   chargeInfoList?: ChargeInfoList[];
@@ -456,7 +428,7 @@ export interface Track {
   alia?: string[];
   pop?: number;
   st?: number;
-  rt?: Rt | null;
+  rt?: string | null;
   fee?: number;
   v?: number;
   crbt?: null;
@@ -531,34 +503,6 @@ export interface AlbumMeta {
   id?: number;
   name?: string;
 }
-
-export enum Rt {
-  Empty = "",
-  The600902000007952625 = "600902000007952625",
-  The600902000008882893 = "600902000008882893",
-  The600902000008893619 = "600902000008893619",
-  The600902000009535428 = "600902000009535428",
-  The600907000001520578 = "600907000001520578"
-}
-
-export enum DLLevel {
-  Hires = "hires",
-  Lossless = "lossless",
-  None = "none"
-}
-
-export enum MaxBrLevel {
-  Exhigh = "exhigh",
-  Hires = "hires",
-  Lossless = "lossless"
-}
-
-export enum LLevel {
-  Exhigh = "exhigh",
-  None = "none",
-  Standard = "standard"
-}
-
 export interface PlaylistDetailRes {
   songs?: Song[];
   privileges?: Privilege[];

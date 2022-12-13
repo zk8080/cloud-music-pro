@@ -7,6 +7,7 @@ import { IllustrationNoResult, IllustrationNoResultDark } from "@douyinfe/semi-i
 import SongListTable from "@/components/SongListTable";
 import { format } from "date-fns";
 import { Song } from "@/types/home";
+import { handlePlayer } from "@/utils";
 
 const { Title, Paragraph } = Typography;
 
@@ -79,7 +80,13 @@ function AlbumDetail() {
             )}
 
             <div className="mt-auto">
-              <Button type="primary" theme="solid" size="large" className="mr-4">
+              <Button
+                type="primary"
+                theme="solid"
+                size="large"
+                className="mr-4"
+                onClick={() => handlePlayer(songs.map((item) => item.id!))}
+              >
                 播放全部
               </Button>
               <Button type="tertiary" theme="solid" size="large" icon={<IconHeartStroked />} className="mr-4">
@@ -94,7 +101,7 @@ function AlbumDetail() {
       </Skeleton>
 
       <Title heading={3}>全部歌曲</Title>
-      <SongListTable<Song> tableLoading={isLoading} dataSource={songs} />
+      <SongListTable<Song> tableLoading={isLoading} dataSource={songs} onPlayClick={(item) => handlePlayer(item.id!)} />
     </div>
   );
 }

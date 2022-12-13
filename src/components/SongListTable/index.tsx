@@ -1,6 +1,6 @@
 import { Song } from "@/types/home";
 import { formatPlayTime } from "@/utils";
-import { IconPlayCircle, IconHeartStroked, IconShareStroked, IconMusic } from "@douyinfe/semi-icons";
+import { IconPlayCircle, IconHeartStroked, IconShareStroked, IconMusic, IconPause } from "@douyinfe/semi-icons";
 import { Table } from "@douyinfe/semi-ui";
 import { ColumnProps, TableProps } from "@douyinfe/semi-ui/lib/es/table";
 import { useState } from "react";
@@ -12,10 +12,12 @@ interface ISongListTableProps<T extends Record<string, any> = any> extends Table
   tableLoading?: boolean;
   onPlayClick?: (item: T) => void;
   curPlayId?: number;
+  playing?: boolean;
+  onPauseClick?: (item: T) => void;
 }
 
 function SongListTable<T extends Record<string, any> = any>(props: ISongListTableProps<T>) {
-  const { dataSource, tableLoading, onPlayClick, curPlayId, ...restProps } = props || {};
+  const { dataSource, tableLoading, onPlayClick, curPlayId, playing, onPauseClick, ...restProps } = props || {};
 
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ function SongListTable<T extends Record<string, any> = any>(props: ISongListTabl
       dataIndex: "sort",
       width: "10%",
       render: (text, record, index) => {
-        if (record?.id === curPlayId) {
+        if (playing && record?.id === curPlayId) {
           return <IconMusic className="animate-spin-slow" />;
         }
         return index + 1;
@@ -81,7 +83,11 @@ function SongListTable<T extends Record<string, any> = any>(props: ISongListTabl
         if (curMouseId && curMouseId === record.id) {
           return (
             <div className="song-duration--operation flex justify-between">
-              <IconPlayCircle className="cursor-pointer" size="large" onClick={() => onPlayClick?.(record)} />
+              {playing && record.id === curPlayId ? (
+                <IconPause className="cursor-pointer" size="large" onClick={() => onPauseClick?.(record)} />
+              ) : (
+                <IconPlayCircle className="cursor-pointer" size="large" onClick={() => onPlayClick?.(record)} />
+              )}
               <IconHeartStroked className="cursor-pointer" size="large" />
               <IconShareStroked className="cursor-pointer" size="large" />
             </div>

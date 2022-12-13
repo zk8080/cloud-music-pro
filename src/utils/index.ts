@@ -21,3 +21,23 @@ export const formatPlayTime = (interval: number) => {
   const second = (interval % 60).toString().padStart(2, "0");
   return `${minute}:${second}`;
 };
+
+// 播放歌曲公共方法
+export const handlePlayer = (ids: number | number[]) => {
+  const curDetailPlayerIds: number[] = JSON.parse(localStorage.getItem("cloud-music-pro-playerList") || "[]");
+  // 播放单首歌曲
+  if (typeof ids === "number") {
+    // 播放列表不存在该歌曲
+    if (!curDetailPlayerIds?.includes(ids)) {
+      curDetailPlayerIds.unshift(ids);
+      localStorage.setItem("cloud-music-pro-playerList", JSON.stringify(curDetailPlayerIds));
+    }
+    localStorage.setItem("cloud-music-pro-playerId", String(ids));
+  } else {
+    if (ids?.length <= 0) return;
+    // 播放整个歌单
+    localStorage.setItem("cloud-music-pro-playerList", JSON.stringify(ids));
+    localStorage.setItem("cloud-music-pro-playerId", String(ids[0]));
+  }
+  window.open("/player", "ColudMusicProPlayer");
+};
