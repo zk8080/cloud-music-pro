@@ -44,3 +44,55 @@ export interface SongItem {
   privilege?: Privilege;
   tns?: string[];
 }
+
+export interface SongUrlRes {
+  data?: Datum[];
+  code?: number;
+}
+
+export interface Datum {
+  id?: number;
+  url?: string;
+  br?: number;
+  size?: number;
+  md5?: string;
+  code?: number;
+  expi?: number;
+  type?: string;
+  gain?: number;
+  peak?: number;
+  fee?: number;
+  uf?: null;
+  payed?: number;
+  flag?: number;
+  canExtend?: boolean;
+  freeTrialInfo?: FreeTrialInfo;
+  level?: string;
+  encodeType?: string;
+  freeTrialPrivilege?: FreeTrialPrivilege;
+  freeTimeTrialPrivilege?: FreeTimeTrialPrivilege;
+  urlSource?: number;
+  rightSource?: number;
+  podcastCtrp?: null;
+  effectTypes?: null;
+  time?: number;
+}
+
+export interface FreeTimeTrialPrivilege {
+  resConsumable?: boolean;
+  userConsumable?: boolean;
+  type?: number;
+  remainTime?: number;
+}
+
+export interface FreeTrialInfo {
+  start?: number;
+  end?: number;
+}
+
+export interface FreeTrialPrivilege {
+  resConsumable?: boolean;
+  userConsumable?: boolean;
+  listenType?: null;
+  cannotListenReason?: null;
+}

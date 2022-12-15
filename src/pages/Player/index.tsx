@@ -1,29 +1,32 @@
 import SongListTable from "@/components/SongListTable";
 import {
   IconHeartStroked,
+  IconMute,
   IconPause,
   IconPlay,
   IconRestart,
   IconShareStroked,
   IconSync,
+  IconVolume1,
   IconVolume2
 } from "@douyinfe/semi-icons";
-import { Image, Slider } from "@douyinfe/semi-ui";
+import { Image, Modal, Slider, Toast } from "@douyinfe/semi-ui";
 import { useToggle } from "ahooks";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatPlayTime } from "@/utils";
 import { SongItem } from "@/types/player";
-import { getSongDetail } from "@/http/api";
-import { useQuery } from "@tanstack/react-query";
+import { getSongDetail, getSongUrl } from "@/http/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalStorageState } from "ahooks";
 
 function Player() {
-  const [playing, { toggle: togglePlayer, setRight }] = useToggle(); // 播放中
+  const [playing, { toggle: togglePlayer, setRight, setLeft }] = useToggle(); // 播放中
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [songReady, setSongReady] = useState(true); // 歌曲缓存完成
   const [playTime, setPlayTime] = useState<number>(0);
   const [playIdList] = useLocalStorageState<number[]>("cloud-music-pro-playerList");
   const [curPlayId, setCurPlayId] = useLocalStorageState<number>("cloud-music-pro-playerId");
+  const [volume, setVolume] = useState<number>(100);
+  const [duration, setDuration] = useState<number>(0);
 
   const { data: songList, isLoading } = useQuery(
     ["playerSongDetail", playIdList],
@@ -36,16 +39,80 @@ function Player() {
     }
   );
 
+  const songUrlMutation = useMutation(
+    (id: string) => {
+      return getSongUrl({ id });
+    },
+    {
+      onSuccess: async (res) => {
+        const { url, freeTrialInfo, time = 0 } = res.data?.[0] || {};
+        setDuration(time / 1000);
+        if (url) {
+          audioRef.current!.src = url;
+          setTimeout(() => {
+            audioRef
+              .current!.play()
+              .then(() => {
+                setRight();
+              })
+              .catch((e) => {
+                if (e.name === "NotAllowedError") {
+                  Modal.warning({
+                    title: "提示",
+                    content: "由于您的浏览器设置，音乐无法自动播放，请手动点击播放。",
+                    onOk: () => {
+                      audioRef.current!.play().then(() => {
+                        setRight();
+                      });
+                    },
+                    cancelButtonProps: {
+                      theme: "solid"
+                    }
+                  });
+                }
+              })
+              .finally(() => {
+                if (freeTrialInfo) {
+                  Toast.info({
+                    content: "版权原因，正在为你播放试听片段",
+                    showClose: false
+                  });
+                }
+              });
+          });
+        } else {
+          Toast.error({
+            content: "播放失败",
+            showClose: false
+          });
+        }
+      }
+    }
+  );
+
   const curSong = useMemo(() => songList?.find((item) => item.id === curPlayId), [songList, curPlayId]);
 
-  const { dt = 0, name, al, ar } = curSong || {};
+  const { name, al, ar } = curSong || {};
   const percent = useMemo(() => {
-    const duration = dt / 1000;
     return isNaN(playTime / duration) ? 0 : (Math.ceil(playTime) / Math.ceil(duration)) * 100;
-  }, [playTime, dt]);
+  }, [playTime, duration]);
+
+  // 播放音乐
+  const handlePlayer = (id: number) => {
+    setPlayTime(0);
+    setLeft();
+    songUrlMutation.mutate(String(id));
+  };
 
   const handleError = () => {
-    setSongReady(true);
+    Toast.error({
+      content: "播放出错",
+      showClose: false
+    });
+  };
+
+  const handleAudioEnd = () => {
+    setLeft();
   };
 
   useEffect(() => {
@@ -53,18 +120,14 @@ function Player() {
   }, [playing]);
 
   useEffect(() => {
-    if (curPlayId) {
-      const songUrl = `https://music.163.com/song/media/outer/url?id=${curPlayId}.mp3`;
-      audioRef.current!.src = songUrl;
-      setTimeout(() => {
-        audioRef.current!.play().then(() => {
-          // 歌曲开始播放后将标识设置为true
-          setSongReady(true);
-          setRight();
-        });
-      });
+    if (curPlayId && !isLoading) {
+      handlePlayer(curPlayId);
     }
-  }, [curPlayId]);
+  }, [curPlayId, isLoading]);
+
+  useEffect(() => {
+    audioRef.current!.volume = volume / 100;
+  }, [volume]);
 
   useEffect(() => {
     window.name = "ColudMusicProPlayer";
@@ -109,10 +172,10 @@ function Player() {
         </div>
         <div className="flex flex-col w-2/3 mx-3">
           <div className="flex justify-between mb-2 mx-3">
-            <span>歌曲名称</span>
-            {dt && (
+            <span>{name}</span>
+            {duration && (
               <span>
-                {formatPlayTime(playTime)} / {formatPlayTime(dt / 1000)}
+                {formatPlayTime(playTime)} / {formatPlayTime(duration)}
               </span>
             )}
           </div>
@@ -120,7 +183,7 @@ function Player() {
             value={percent}
             onChange={(val) => {
               if (typeof val == "number") {
-                const newTime = val * (dt / 1000 / 100);
+                const newTime = val * (duration / 100);
                 setPlayTime(newTime);
                 audioRef.current!.currentTime = newTime;
                 if (!playing) {
@@ -128,6 +191,7 @@ function Player() {
                 }
               }
             }}
+            tooltipVisible={false}
           />
         </div>
         <div className="flex items-center">
@@ -136,10 +200,11 @@ function Player() {
           <IconShareStroked className="text-2xl" />
         </div>
         <div className="flex items-center">
-          <IconVolume2 className="text-2xl ml-3 mr-2" />
-          {/* <div className="h-1 bg-black dark:bg-white w-20"></div> */}
+          {volume === 0 && <IconMute className="text-2xl ml-3 mr-2" />}
+          {volume > 0 && volume <= 50 && <IconVolume1 className="text-2xl ml-3 mr-2" />}
+          {volume > 50 && <IconVolume2 className="text-2xl ml-3 mr-2" />}
           <div className="w-24">
-            <Slider></Slider>
+            <Slider value={volume} onChange={(val) => setVolume(val as number)} tooltipVisible={false} />
           </div>
         </div>
       </div>
@@ -150,7 +215,7 @@ function Player() {
           // @ts-ignore
           setPlayTime(e.target.currentTime);
         }}
-        // onEnded={handleAudioEnd}
+        onEnded={handleAudioEnd}
         onError={handleError}
       ></audio>
     </div>

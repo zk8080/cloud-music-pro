@@ -10,6 +10,7 @@
   [type="reset"],
   [type="submit"] {
     background-color: var(--semi-color-primary);
+    outline: none !important;
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
