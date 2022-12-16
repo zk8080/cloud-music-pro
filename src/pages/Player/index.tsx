@@ -10,14 +10,32 @@ import {
   IconVolume1,
   IconVolume2
 } from "@douyinfe/semi-icons";
-import { Image, Modal, Slider, Toast } from "@douyinfe/semi-ui";
+import { Image, Modal, Slider, Toast, Tooltip } from "@douyinfe/semi-ui";
 import { useToggle } from "ahooks";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formatPlayTime } from "@/utils";
-import { SongItem } from "@/types/player";
+import { formatPlayTime, shuffle } from "@/utils";
+import { ModeType, SongItem } from "@/types/player";
 import { getSongDetail, getSongUrl } from "@/http/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalStorageState } from "ahooks";
+import ShuffleLogo from "@/assets/shuffle-line.svg";
+import RepeatLogo from "@/assets/repeat-2-line.svg";
+import RepeatOneLogo from "@/assets/repeat-one-line.svg";
+
+const modeSrcMap = {
+  0: {
+    src: RepeatLogo,
+    text: "列表循环"
+  },
+  1: {
+    src: RepeatOneLogo,
+    text: "单曲循环"
+  },
+  2: {
+    src: ShuffleLogo,
+    text: "随机播放"
+  }
+};
 
 function Player() {
   const [playing, { toggle: togglePlayer, setRight, setLeft }] = useToggle(); // 播放中
@@ -27,13 +45,15 @@ function Player() {
   const [curPlayId, setCurPlayId] = useLocalStorageState<number>("cloud-music-pro-playerId");
   const [volume, setVolume] = useState<number>(100);
   const [duration, setDuration] = useState<number>(0);
+  const [mode, setMode] = useState<ModeType>(0);
+  const [playSongList, setPlaySongList] = useState<SongItem[]>([]); // 实际播放列表
 
   const { data: songList, isLoading } = useQuery(
     ["playerSongDetail", playIdList],
     () => getSongDetail({ ids: playIdList?.join(",") }),
     {
       select(data) {
-        if (data.code === 200) return data.songs || [];
+        return data.songs || [];
       },
       enabled: playIdList.length >= 0
     }
@@ -67,7 +87,8 @@ function Player() {
                     },
                     cancelButtonProps: {
                       theme: "solid"
-                    }
+                    },
+                    closable: false
                   });
                 }
               })
@@ -90,7 +111,16 @@ function Player() {
     }
   );
 
-  const curSong = useMemo(() => songList?.find((item) => item.id === curPlayId), [songList, curPlayId]);
+  const { curSong, curIdx } = useMemo(() => {
+    const curIdx = playSongList?.findIndex((item) => item.id === curPlayId);
+    if (typeof curIdx === "number" && playSongList) {
+      return {
+        curSong: playSongList[curIdx],
+        curIdx
+      };
+    }
+    return {};
+  }, [playSongList, curPlayId]);
 
   const { name, al, ar } = curSong || {};
   const percent = useMemo(() => {
@@ -111,9 +141,65 @@ function Player() {
     });
   };
 
-  const handleAudioEnd = () => {
-    setLeft();
+  // 单曲循环
+  const handleLoop = () => {
+    setPlayTime(0);
+    audioRef.current!.play();
   };
+
+  const handleAudioEnd = () => {
+    if (mode === 1) {
+      handleLoop();
+    } else {
+      setLeft();
+      handleNext();
+    }
+  };
+
+  // 上一首
+  const handlePrev = () => {
+    if (typeof curIdx === "number" && playSongList) {
+      let tmpIdx = curIdx - 1;
+      if (tmpIdx < 0) {
+        tmpIdx = playSongList?.length - 1;
+      }
+      setCurPlayId(playSongList[tmpIdx].id!);
+    }
+  };
+
+  // 下一首
+  const handleNext = () => {
+    if (typeof curIdx === "number" && playSongList) {
+      let tmpIdx = curIdx + 1;
+      if (tmpIdx === playSongList?.length) {
+        tmpIdx = 0;
+      }
+      setCurPlayId(playSongList[tmpIdx].id!);
+    }
+  };
+
+  // 更改播放模式
+  const changeMode = () => {
+    const newMode = ((mode + 1) % 3) as ModeType;
+    if (newMode === 0) {
+      //顺序模式
+      setPlaySongList(songList || []);
+    } else if (newMode === 1) {
+      //单曲循环
+      // changePlayListDispatch(sequencePlayList);
+      setPlaySongList([curSong!]);
+    } else if (newMode === 2) {
+      //随机播放
+      const newList = shuffle(songList || []);
+      // changePlayListDispatch(newList);
+      setPlaySongList(newList || []);
+    }
+    setMode(newMode);
+  };
+
+  useEffect(() => {
+    setPlaySongList(songList || []);
+  }, [songList?.length]);
 
   useEffect(() => {
     playing ? audioRef.current!.play() : audioRef.current!.pause();
@@ -135,7 +221,7 @@ function Player() {
 
   return (
     <div className="w-heart--wrapper flex flex-col pb-24">
-      <div className="flex-1 px-32 flex">
+      <div className="flex-1 px-32 flex justify-between">
         <SongListTable<SongItem>
           dataSource={songList}
           scroll={{ y: document.body.clientHeight - 240 }}
@@ -149,7 +235,7 @@ function Player() {
           curPlayId={curPlayId}
           playing={playing}
           onPauseClick={togglePlayer}
-          loading={isLoading}
+          tableLoading={isLoading}
         />
         <div className="ml-8 mt-5 shrink-0">
           <Image width={200} height={200} src={`${al?.picUrl}?param=224y224`} />
@@ -162,13 +248,13 @@ function Player() {
       </div>
       <div className="fixed bottom-0 z-50 w-full backdrop-blur px-32 h-20 flex items-center">
         <div className="flex items-center cursor-pointer">
-          <IconRestart className="text-2xl" />
+          <IconRestart className="text-2xl" onClick={handlePrev} />
           {playing ? (
             <IconPause className="text-3xl mx-5" onClick={togglePlayer} />
           ) : (
             <IconPlay className="text-3xl mx-5" onClick={togglePlayer} />
           )}
-          <IconRestart className="text-2xl rotate-180" />
+          <IconRestart className="text-2xl rotate-180" onClick={handleNext} />
         </div>
         <div className="flex flex-col w-2/3 mx-3">
           <div className="flex justify-between mb-2 mx-3">
@@ -195,7 +281,9 @@ function Player() {
           />
         </div>
         <div className="flex items-center">
-          <IconSync className="text-2xl" />
+          <Tooltip content={modeSrcMap[mode].text}>
+            <img src={modeSrcMap[mode].src} alt="" className="cursor-pointer" onClick={changeMode} />
+          </Tooltip>
           <IconHeartStroked className="text-2xl mx-3" />
           <IconShareStroked className="text-2xl" />
         </div>

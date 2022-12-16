@@ -41,3 +41,22 @@ export const handlePlayer = (ids: number | number[]) => {
   }
   window.open("/player", "ColudMusicProPlayer");
 };
+
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+// 随机算法
+export function shuffle<T>(arr: T[]) {
+  const new_arr: T[] = [];
+  arr.forEach((item) => {
+    new_arr.push(item);
+  });
+  for (let i = 0; i < new_arr.length; i++) {
+    const j = getRandomInt(0, i);
+    const t = new_arr[i];
+    new_arr[i] = new_arr[j];
+    new_arr[j] = t;
+  }
+  return new_arr;
+}

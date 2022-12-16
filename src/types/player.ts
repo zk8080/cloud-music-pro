@@ -1,5 +1,7 @@
 import { Al, Ar, H, Privilege } from "./home";
 
+export type ModeType = 0 | 1 | 2;
+
 export interface SongDetailRes {
   resourceState?: boolean;
   songs?: SongItem[];
