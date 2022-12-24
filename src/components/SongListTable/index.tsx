@@ -1,6 +1,12 @@
-import { Song } from "@/types/home";
 import { formatPlayTime } from "@/utils";
-import { IconPlayCircle, IconHeartStroked, IconShareStroked, IconMusic, IconPause } from "@douyinfe/semi-icons";
+import {
+  IconPlayCircle,
+  IconHeartStroked,
+  IconShareStroked,
+  IconMusic,
+  IconPause,
+  IconDeleteStroked
+} from "@douyinfe/semi-icons";
 import { Table } from "@douyinfe/semi-ui";
 import { ColumnProps, TableProps } from "@douyinfe/semi-ui/lib/es/table";
 import { useState } from "react";
@@ -14,10 +20,22 @@ interface ISongListTableProps<T extends Record<string, any> = any> extends Table
   curPlayId?: number;
   playing?: boolean;
   onPauseClick?: (item: T) => void;
+  showDelete?: boolean;
+  onDeleteClick?: (item: T) => void;
 }
 
 function SongListTable<T extends Record<string, any> = any>(props: ISongListTableProps<T>) {
-  const { dataSource, tableLoading, onPlayClick, curPlayId, playing, onPauseClick, ...restProps } = props || {};
+  const {
+    dataSource,
+    tableLoading,
+    onPlayClick,
+    curPlayId,
+    playing,
+    onPauseClick,
+    showDelete = false,
+    onDeleteClick,
+    ...restProps
+  } = props || {};
 
   const navigate = useNavigate();
 
@@ -90,6 +108,9 @@ function SongListTable<T extends Record<string, any> = any>(props: ISongListTabl
               )}
               <IconHeartStroked className="cursor-pointer" size="large" />
               <IconShareStroked className="cursor-pointer" size="large" />
+              {showDelete && (
+                <IconDeleteStroked className="cursor-pointer" size="large" onClick={() => onDeleteClick?.(record)} />
+              )}
             </div>
           );
         }

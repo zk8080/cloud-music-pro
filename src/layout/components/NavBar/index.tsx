@@ -34,6 +34,8 @@ function NavBar() {
 
   const selectKeys = useMemo(() => [pathname], [pathname]);
 
+  const isPlayer = useMemo(() => pathname === "/player", [pathname]);
+
   // 退出登录
   const logoutMutation = useMutation(
     () => {
@@ -51,11 +53,15 @@ function NavBar() {
       mode={"horizontal"}
       className="cloud-layout--navbar shrink-0"
       selectedKeys={selectKeys}
-      items={[
-        { itemKey: "/", text: "首页" },
-        { itemKey: "/category", text: "歌单" },
-        { itemKey: "/singer", text: "歌手" }
-      ]}
+      items={
+        isPlayer
+          ? []
+          : [
+              { itemKey: "/", text: "首页" },
+              { itemKey: "/category", text: "歌单" },
+              { itemKey: "/singer", text: "歌手" }
+            ]
+      }
       onClick={(item) => {
         navigate(item.itemKey as string);
       }}

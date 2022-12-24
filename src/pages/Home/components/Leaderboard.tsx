@@ -1,5 +1,6 @@
 import { getPlaylistTrackList, getToplist } from "@/http/api";
 import { List, Song } from "@/types/home";
+import { handlePlayer } from "@/utils";
 import { Skeleton, Typography } from "@douyinfe/semi-ui";
 import { useQuery } from "@tanstack/react-query";
 import { Fragment } from "react";
@@ -73,7 +74,14 @@ function Leaderboard() {
                       <li key={track.id} className="top-detail--item flex px-5 cursor-pointer text-white text-xl">
                         <span className="italic font-bold">{index + 1}.</span>
                         <span className="flex flex-col ml-3">
-                          <Text ellipsis={{ showTooltip: true }}>{track.name}</Text>
+                          <Text
+                            ellipsis={{ showTooltip: true }}
+                            onClick={() => {
+                              handlePlayer(track.id!);
+                            }}
+                          >
+                            <span className="cursor-pointer hover:text-primary">{track.name}</span>
+                          </Text>
                           <Text ellipsis={{ showTooltip: true }}>
                             {track.ar?.map((item, idx) => {
                               const { id, name } = item || {};

@@ -6,17 +6,16 @@ import {
   IconPlay,
   IconRestart,
   IconShareStroked,
-  IconSync,
   IconVolume1,
   IconVolume2
 } from "@douyinfe/semi-icons";
 import { Image, Modal, Slider, Toast, Tooltip } from "@douyinfe/semi-ui";
-import { useToggle } from "ahooks";
+import { usePrevious, useToggle } from "ahooks";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatPlayTime, shuffle } from "@/utils";
 import { ModeType, SongItem } from "@/types/player";
 import { getSongDetail, getSongUrl } from "@/http/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorageState } from "ahooks";
 import ShuffleLogo from "@/assets/shuffle-line.svg";
 import RepeatLogo from "@/assets/repeat-2-line.svg";
@@ -38,15 +37,17 @@ const modeSrcMap = {
 };
 
 function Player() {
+  const queryClient = useQueryClient();
   const [playing, { toggle: togglePlayer, setRight, setLeft }] = useToggle(); // 播放中
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playTime, setPlayTime] = useState<number>(0);
-  const [playIdList] = useLocalStorageState<number[]>("cloud-music-pro-playerList");
+  const [playIdList, setPlayIdList] = useLocalStorageState<number[]>("cloud-music-pro-playerList");
   const [curPlayId, setCurPlayId] = useLocalStorageState<number>("cloud-music-pro-playerId");
   const [volume, setVolume] = useState<number>(100);
   const [duration, setDuration] = useState<number>(0);
   const [mode, setMode] = useState<ModeType>(0);
   const [playSongList, setPlaySongList] = useState<SongItem[]>([]); // 实际播放列表
+  const preVolume = usePrevious(volume);
 
   const { data: songList, isLoading } = useQuery(
     ["playerSongDetail", playIdList],
@@ -186,12 +187,10 @@ function Player() {
       setPlaySongList(songList || []);
     } else if (newMode === 1) {
       //单曲循环
-      // changePlayListDispatch(sequencePlayList);
       setPlaySongList([curSong!]);
     } else if (newMode === 2) {
       //随机播放
       const newList = shuffle(songList || []);
-      // changePlayListDispatch(newList);
       setPlaySongList(newList || []);
     }
     setMode(newMode);
@@ -236,6 +235,18 @@ function Player() {
           playing={playing}
           onPauseClick={togglePlayer}
           tableLoading={isLoading}
+          showDelete={true}
+          onDeleteClick={async (obj) => {
+            const newIdList = playIdList.filter((id) => id !== obj.id);
+            // 查询失效，主动设置查询缓存数据
+            await queryClient.invalidateQueries(["playerSongDetail"]);
+            // 执行"乐观"更新
+            queryClient.setQueryData(["playerSongDetail", newIdList], () => {
+              return songList?.filter((item) => item.id !== obj.id);
+            });
+            setPlayIdList(newIdList);
+            setCurPlayId(newIdList?.[0]);
+          }}
         />
         <div className="ml-8 mt-5 shrink-0">
           <Image width={200} height={200} src={`${al?.picUrl}?param=224y224`} />
@@ -287,12 +298,12 @@ function Player() {
           <IconHeartStroked className="text-2xl mx-3" />
           <IconShareStroked className="text-2xl" />
         </div>
-        <div className="flex items-center">
-          {volume === 0 && <IconMute className="text-2xl ml-3 mr-2" />}
-          {volume > 0 && volume <= 50 && <IconVolume1 className="text-2xl ml-3 mr-2" />}
-          {volume > 50 && <IconVolume2 className="text-2xl ml-3 mr-2" />}
+        <div className="flex items-center cursor-pointer">
+          {volume === 0 && <IconMute className="text-2xl ml-3 mr-2" onClick={() => setVolume(preVolume!)} />}
+          {volume > 0 && volume <= 50 && <IconVolume1 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
+          {volume > 50 && <IconVolume2 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
           <div className="w-24">
-            <Slider value={volume} onChange={(val) => setVolume(val as number)} tooltipVisible={false} />
+            <Slider value={volume} onChange={(val) => setVolume(val as number)} />
           </div>
         </div>
       </div>

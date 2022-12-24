@@ -1,5 +1,5 @@
 import { getPersonalizedNewSong } from "@/http/api";
-import { chunk } from "@/utils";
+import { chunk, handlePlayer } from "@/utils";
 import { Carousel, Skeleton, Typography } from "@douyinfe/semi-ui";
 import SongCard from "@/components/SongCard";
 import { useQuery } from "@tanstack/react-query";
@@ -65,21 +65,30 @@ function PersonalizedNewSong() {
                     } = childItem || {};
                     const { artists } = song || {};
                     return (
-                      <SongCard
+                      <div
                         key={id}
-                        coverImgUrl={picUrl}
-                        songName={name}
-                        textRender={
-                          artists && artists[0]?.id ? (
-                            <Text
-                              className="hover:text-primary cursor-pointer"
-                              onClick={() => navigate(`/singerDetail/${artists[0]?.id}`)}
-                            >
-                              {artists[0]?.name}
-                            </Text>
-                          ) : null
-                        }
-                      />
+                        onClick={() => {
+                          handlePlayer(id!);
+                        }}
+                      >
+                        <SongCard
+                          coverImgUrl={picUrl}
+                          songName={name}
+                          textRender={
+                            artists && artists[0]?.id ? (
+                              <Text
+                                className="hover:text-primary cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(`/singerDetail/${artists[0]?.id}`);
+                                }}
+                              >
+                                {artists[0]?.name}
+                              </Text>
+                            ) : null
+                          }
+                        />
+                      </div>
                     );
                   })}
                 </div>

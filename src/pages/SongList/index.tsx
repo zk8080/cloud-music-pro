@@ -69,7 +69,7 @@ function SongList() {
       >
         <div className="flex py-6">
           <div className="w-64 h-64 shrink-0 mr-8">
-            <img src={`${coverImgUrl}?param=224y224`} className="w-full h-full" alt="" />
+            <img src={`${coverImgUrl}?param=224y224`} className="w-full h-full rounded-md" alt="" />
           </div>
           <div className="flex flex-col">
             <Title heading={2}>{name}</Title>
