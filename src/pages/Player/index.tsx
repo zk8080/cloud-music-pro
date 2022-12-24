@@ -48,7 +48,6 @@ function Player() {
   const [mode, setMode] = useState<ModeType>(0);
   const [playSongList, setPlaySongList] = useState<SongItem[]>([]); // 实际播放列表
   const preVolume = usePrevious(volume);
-
   const { data: songList, isLoading } = useQuery(
     ["playerSongDetail", playIdList],
     () => getSongDetail({ ids: playIdList?.join(",") }),
@@ -56,7 +55,7 @@ function Player() {
       select(data) {
         return data.songs || [];
       },
-      enabled: playIdList.length >= 0
+      enabled: playIdList.length > 0
     }
   );
 
@@ -234,7 +233,7 @@ function Player() {
           curPlayId={curPlayId}
           playing={playing}
           onPauseClick={togglePlayer}
-          tableLoading={isLoading}
+          tableLoading={isLoading && playIdList.length > 0}
           showDelete={true}
           onDeleteClick={async (obj) => {
             const newIdList = playIdList.filter((id) => id !== obj.id);
@@ -245,68 +244,78 @@ function Player() {
               return songList?.filter((item) => item.id !== obj.id);
             });
             setPlayIdList(newIdList);
-            setCurPlayId(newIdList?.[0]);
+            if (curPlayId === obj.id) {
+              setLeft();
+              setCurPlayId(newIdList?.[0]);
+            }
           }}
         />
         <div className="ml-8 mt-5 shrink-0">
           <Image width={200} height={200} src={`${al?.picUrl}?param=224y224`} />
           <div className="text-center pt-2">
-            <p>歌曲名：{name}</p>
-            <p>歌手：{ar?.map((item) => item.name).join("/")}</p>
-            <p>专辑：《{al?.name}》</p>
-          </div>
-        </div>
-      </div>
-      <div className="fixed bottom-0 z-50 w-full backdrop-blur px-32 h-20 flex items-center">
-        <div className="flex items-center cursor-pointer">
-          <IconRestart className="text-2xl" onClick={handlePrev} />
-          {playing ? (
-            <IconPause className="text-3xl mx-5" onClick={togglePlayer} />
-          ) : (
-            <IconPlay className="text-3xl mx-5" onClick={togglePlayer} />
-          )}
-          <IconRestart className="text-2xl rotate-180" onClick={handleNext} />
-        </div>
-        <div className="flex flex-col w-2/3 mx-3">
-          <div className="flex justify-between mb-2 mx-3">
-            <span>{name}</span>
-            {duration && (
-              <span>
-                {formatPlayTime(playTime)} / {formatPlayTime(duration)}
-              </span>
+            {curPlayId && (
+              <>
+                <p>歌曲名：{name}</p>
+                <p>歌手：{ar?.map((item) => item.name).join("/")}</p>
+                <p>专辑：《{al?.name}》</p>
+              </>
             )}
-          </div>
-          <Slider
-            value={percent}
-            onChange={(val) => {
-              if (typeof val == "number") {
-                const newTime = val * (duration / 100);
-                setPlayTime(newTime);
-                audioRef.current!.currentTime = newTime;
-                if (!playing) {
-                  togglePlayer();
-                }
-              }
-            }}
-            tooltipVisible={false}
-          />
-        </div>
-        <div className="flex items-center">
-          <Tooltip content={modeSrcMap[mode].text}>
-            <img src={modeSrcMap[mode].src} alt="" className="cursor-pointer" onClick={changeMode} />
-          </Tooltip>
-          <IconHeartStroked className="text-2xl mx-3" />
-          <IconShareStroked className="text-2xl" />
-        </div>
-        <div className="flex items-center cursor-pointer">
-          {volume === 0 && <IconMute className="text-2xl ml-3 mr-2" onClick={() => setVolume(preVolume!)} />}
-          {volume > 0 && volume <= 50 && <IconVolume1 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
-          {volume > 50 && <IconVolume2 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
-          <div className="w-24">
-            <Slider value={volume} onChange={(val) => setVolume(val as number)} />
+            {!curPlayId && <p>请选择播放歌曲</p>}
           </div>
         </div>
       </div>
+      {curPlayId && (
+        <div className="fixed bottom-0 z-50 w-full backdrop-blur px-32 h-20 flex items-center">
+          <div className="flex items-center cursor-pointer">
+            <IconRestart className="text-2xl" onClick={handlePrev} />
+            {playing ? (
+              <IconPause className="text-3xl mx-5" onClick={togglePlayer} />
+            ) : (
+              <IconPlay className="text-3xl mx-5" onClick={togglePlayer} />
+            )}
+            <IconRestart className="text-2xl rotate-180" onClick={handleNext} />
+          </div>
+          <div className="flex flex-col w-2/3 mx-3">
+            <div className="flex justify-between mb-2 mx-3">
+              <span>{name}</span>
+              {duration && (
+                <span>
+                  {formatPlayTime(playTime)} / {formatPlayTime(duration)}
+                </span>
+              )}
+            </div>
+            <Slider
+              value={percent}
+              onChange={(val) => {
+                if (typeof val == "number") {
+                  const newTime = val * (duration / 100);
+                  setPlayTime(newTime);
+                  audioRef.current!.currentTime = newTime;
+                  if (!playing) {
+                    togglePlayer();
+                  }
+                }
+              }}
+              tooltipVisible={false}
+            />
+          </div>
+          <div className="flex items-center">
+            <Tooltip content={modeSrcMap[mode].text}>
+              <img src={modeSrcMap[mode].src} alt="" className="cursor-pointer" onClick={changeMode} />
+            </Tooltip>
+            <IconHeartStroked className="text-2xl mx-3" />
+            <IconShareStroked className="text-2xl" />
+          </div>
+          <div className="flex items-center cursor-pointer">
+            {volume === 0 && <IconMute className="text-2xl ml-3 mr-2" onClick={() => setVolume(preVolume!)} />}
+            {volume > 0 && volume <= 50 && <IconVolume1 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
+            {volume > 50 && <IconVolume2 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
+            <div className="w-24">
+              <Slider value={volume} onChange={(val) => setVolume(val as number)} />
+            </div>
+          </div>
+        </div>
+      )}
       <audio
         ref={audioRef}
         onTimeUpdate={(e) => {
