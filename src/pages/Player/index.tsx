@@ -9,7 +9,7 @@ import {
   IconVolume1,
   IconVolume2
 } from "@douyinfe/semi-icons";
-import { Image, Modal, Slider, Toast, Tooltip } from "@douyinfe/semi-ui";
+import { Modal, Slider, Toast, Tooltip } from "@douyinfe/semi-ui";
 import { usePrevious, useToggle } from "ahooks";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatPlayTime, shuffle } from "@/utils";
@@ -20,6 +20,7 @@ import { useLocalStorageState } from "ahooks";
 import ShuffleLogo from "@/assets/shuffle-line.svg";
 import RepeatLogo from "@/assets/repeat-2-line.svg";
 import RepeatOneLogo from "@/assets/repeat-one-line.svg";
+import PlayerInfo from "./components/PlayerInfo";
 
 const modeSrcMap = {
   0: {
@@ -41,21 +42,29 @@ function Player() {
   const [playing, { toggle: togglePlayer, setRight, setLeft }] = useToggle(); // 播放中
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playTime, setPlayTime] = useState<number>(0);
-  const [playIdList, setPlayIdList] = useLocalStorageState<number[]>("cloud-music-pro-playerList");
+  const [playIdList, setPlayIdList] = useLocalStorageState<number[]>("cloud-music-pro-playerList", {
+    defaultValue: []
+  });
   const [curPlayId, setCurPlayId] = useLocalStorageState<number>("cloud-music-pro-playerId");
   const [volume, setVolume] = useState<number>(100);
   const [duration, setDuration] = useState<number>(0);
   const [mode, setMode] = useState<ModeType>(0);
+  const [songList, setSongList] = useState<SongItem[]>([]); // 全量播放列表
   const [playSongList, setPlaySongList] = useState<SongItem[]>([]); // 实际播放列表
   const preVolume = usePrevious(volume);
-  const { data: songList, isLoading } = useQuery(
+
+  const { isLoading } = useQuery(
     ["playerSongDetail", playIdList],
     () => getSongDetail({ ids: playIdList?.join(",") }),
     {
       select(data) {
         return data.songs || [];
       },
-      enabled: playIdList.length > 0
+      onSuccess(data) {
+        setSongList(data);
+        handlePlaySongListByMode(mode, data);
+      },
+      enabled: playIdList?.length > 0
     }
   );
 
@@ -178,26 +187,27 @@ function Player() {
     }
   };
 
+  // 根据播放模式 设置播放列表
+  const handlePlaySongListByMode = (modeType: ModeType, list: SongItem[]) => {
+    if (modeType === 0) {
+      //顺序模式
+      setPlaySongList(list || []);
+    } else if (modeType === 1) {
+      //单曲循环
+      setPlaySongList([curSong!]);
+    } else if (modeType === 2) {
+      //随机播放
+      const newList = shuffle(list || []);
+      setPlaySongList(newList || []);
+    }
+  };
+
   // 更改播放模式
   const changeMode = () => {
     const newMode = ((mode + 1) % 3) as ModeType;
-    if (newMode === 0) {
-      //顺序模式
-      setPlaySongList(songList || []);
-    } else if (newMode === 1) {
-      //单曲循环
-      setPlaySongList([curSong!]);
-    } else if (newMode === 2) {
-      //随机播放
-      const newList = shuffle(songList || []);
-      setPlaySongList(newList || []);
-    }
     setMode(newMode);
+    handlePlaySongListByMode(newMode, songList);
   };
-
-  useEffect(() => {
-    setPlaySongList(songList || []);
-  }, [songList?.length]);
 
   useEffect(() => {
     playing ? audioRef.current!.play() : audioRef.current!.pause();
@@ -237,32 +247,29 @@ function Player() {
           showDelete={true}
           onDeleteClick={async (obj) => {
             const newIdList = playIdList.filter((id) => id !== obj.id);
-            // 查询失效，主动设置查询缓存数据
-            await queryClient.invalidateQueries(["playerSongDetail"]);
+            setPlayIdList(newIdList);
+            const newSongList = songList?.filter((item) => item.id !== obj.id);
+            // 取消查询，主动更新歌曲数据
+            await queryClient.cancelQueries(["playerSongDetail"]);
             // 执行"乐观"更新
             queryClient.setQueryData(["playerSongDetail", newIdList], () => {
-              return songList?.filter((item) => item.id !== obj.id);
+              return newSongList;
             });
-            setPlayIdList(newIdList);
+            setSongList(newSongList);
             if (curPlayId === obj.id) {
               setLeft();
               setCurPlayId(newIdList?.[0]);
             }
           }}
         />
-        <div className="ml-8 mt-5 shrink-0">
-          <Image width={200} height={200} src={`${al?.picUrl}?param=224y224`} />
-          <div className="text-center pt-2">
-            {curPlayId && (
-              <>
-                <p>歌曲名：{name}</p>
-                <p>歌手：{ar?.map((item) => item.name).join("/")}</p>
-                <p>专辑：《{al?.name}》</p>
-              </>
-            )}
-            {!curPlayId && <p>请选择播放歌曲</p>}
-          </div>
-        </div>
+        <PlayerInfo
+          key={String(curPlayId)}
+          playId={curPlayId}
+          arNames={ar?.map((item) => item.name).join("/")}
+          alName={al?.name}
+          songName={name}
+          picUrl={al?.picUrl}
+        />
       </div>
       {curPlayId && (
         <div className="fixed bottom-0 z-50 w-full backdrop-blur px-32 h-20 flex items-center">
