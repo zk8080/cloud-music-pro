@@ -1,41 +1,16 @@
 import SongListTable from "@/components/SongListTable";
-import {
-  IconHeartStroked,
-  IconMute,
-  IconPause,
-  IconPlay,
-  IconRestart,
-  IconShareStroked,
-  IconVolume1,
-  IconVolume2
-} from "@douyinfe/semi-icons";
-import { Modal, Slider, Toast, Tooltip } from "@douyinfe/semi-ui";
+
+import { Modal, Toast } from "@douyinfe/semi-ui";
 import { usePrevious, useToggle } from "ahooks";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formatPlayTime, shuffle } from "@/utils";
+import { shuffle } from "@/utils";
 import { ModeType, SongItem } from "@/types/player";
 import { getSongDetail, getSongUrl } from "@/http/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorageState } from "ahooks";
-import ShuffleLogo from "@/assets/shuffle-line.svg";
-import RepeatLogo from "@/assets/repeat-2-line.svg";
-import RepeatOneLogo from "@/assets/repeat-one-line.svg";
 import PlayerInfo from "./components/PlayerInfo";
-
-const modeSrcMap = {
-  0: {
-    src: RepeatLogo,
-    text: "列表循环"
-  },
-  1: {
-    src: RepeatOneLogo,
-    text: "单曲循环"
-  },
-  2: {
-    src: ShuffleLogo,
-    text: "随机播放"
-  }
-};
+import PlayerBar from "./components/PlayerBar";
+import { initialVal } from "@/constants/player";
 
 function Player() {
   const queryClient = useQueryClient();
@@ -128,9 +103,8 @@ function Player() {
         curIdx
       };
     }
-    return {};
+    return initialVal;
   }, [playSongList, curPlayId]);
-
   const { name, al, ar } = curSong || {};
   const percent = useMemo(() => {
     return isNaN(playTime / duration) ? 0 : (Math.ceil(playTime) / Math.ceil(duration)) * 100;
@@ -214,10 +188,10 @@ function Player() {
   }, [playing]);
 
   useEffect(() => {
-    if (curPlayId && !isLoading) {
+    if (curPlayId) {
       handlePlayer(curPlayId);
     }
-  }, [curPlayId, isLoading]);
+  }, [curPlayId]);
 
   useEffect(() => {
     audioRef.current!.volume = volume / 100;
@@ -272,56 +246,31 @@ function Player() {
         />
       </div>
       {curPlayId && (
-        <div className="fixed bottom-0 z-50 w-full backdrop-blur px-32 h-20 flex items-center">
-          <div className="flex items-center cursor-pointer">
-            <IconRestart className="text-2xl" onClick={handlePrev} />
-            {playing ? (
-              <IconPause className="text-3xl mx-5" onClick={togglePlayer} />
-            ) : (
-              <IconPlay className="text-3xl mx-5" onClick={togglePlayer} />
-            )}
-            <IconRestart className="text-2xl rotate-180" onClick={handleNext} />
-          </div>
-          <div className="flex flex-col w-2/3 mx-3">
-            <div className="flex justify-between mb-2 mx-3">
-              <span>{name}</span>
-              {duration && (
-                <span>
-                  {formatPlayTime(playTime)} / {formatPlayTime(duration)}
-                </span>
-              )}
-            </div>
-            <Slider
-              value={percent}
-              onChange={(val) => {
-                if (typeof val == "number") {
-                  const newTime = val * (duration / 100);
-                  setPlayTime(newTime);
-                  audioRef.current!.currentTime = newTime;
-                  if (!playing) {
-                    togglePlayer();
-                  }
-                }
-              }}
-              tooltipVisible={false}
-            />
-          </div>
-          <div className="flex items-center">
-            <Tooltip content={modeSrcMap[mode].text}>
-              <img src={modeSrcMap[mode].src} alt="" className="cursor-pointer" onClick={changeMode} />
-            </Tooltip>
-            <IconHeartStroked className="text-2xl mx-3" />
-            <IconShareStroked className="text-2xl" />
-          </div>
-          <div className="flex items-center cursor-pointer">
-            {volume === 0 && <IconMute className="text-2xl ml-3 mr-2" onClick={() => setVolume(preVolume!)} />}
-            {volume > 0 && volume <= 50 && <IconVolume1 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
-            {volume > 50 && <IconVolume2 className="text-2xl ml-3 mr-2" onClick={() => setVolume(0)} />}
-            <div className="w-24">
-              <Slider value={volume} onChange={(val) => setVolume(val as number)} />
-            </div>
-          </div>
-        </div>
+        <PlayerBar
+          key={curPlayId}
+          playId={curPlayId}
+          togglePlayer={togglePlayer}
+          changeMode={changeMode}
+          handleNext={handleNext}
+          handlePrev={handlePrev}
+          mode={mode}
+          playTime={playTime}
+          percent={percent}
+          volume={volume}
+          setVolume={setVolume}
+          preVolume={preVolume}
+          duration={duration}
+          songName={name}
+          playing={playing}
+          changePercent={(val) => {
+            const newTime = val * (duration / 100);
+            setPlayTime(newTime);
+            audioRef.current!.currentTime = newTime;
+            if (!playing) {
+              togglePlayer();
+            }
+          }}
+        />
       )}
       <audio
         ref={audioRef}
