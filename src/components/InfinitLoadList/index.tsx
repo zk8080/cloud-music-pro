@@ -32,7 +32,7 @@ function InfinitLoadList<T = unknown>(props: IPlayerListProps<T>) {
   return (
     <List
       grid={{
-        gutter: 16,
+        gutter: 12,
         span: 5 / 24
       }}
       className={classNames("w-heart--wrapper", className)}
