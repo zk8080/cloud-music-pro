@@ -98,3 +98,19 @@ export interface FreeTrialPrivilege {
   listenType?: null;
   cannotListenReason?: null;
 }
+
+export interface LyricRes {
+  sgc?: boolean;
+  sfy?: boolean;
+  qfy?: boolean;
+  lrc?: Klyric;
+  klyric?: Klyric;
+  tlyric?: Klyric;
+  romalrc?: Klyric;
+  code?: number;
+}
+
+export interface Klyric {
+  version?: number;
+  lyric?: string;
+}

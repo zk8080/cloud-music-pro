@@ -1,4 +1,4 @@
-import { SongUrlRes } from "./../types/player";
+import { LyricRes, SongUrlRes } from "./../types/player";
 import { RelatedMVRes } from "./../types/singerDetail";
 import { LoginRes, LoginStatusRes } from "@/types/layout";
 import { SingerlistRes } from "@/types/singer";
@@ -143,4 +143,9 @@ export const getSongDetail = async (params: { ids?: string }) => {
 // 获取歌曲详情
 export const getSongUrl = async (params: { id?: string }) => {
   return await http.get<SongUrlRes>("/song/url/v1", { params: { ...params, level: "standard" } });
+};
+
+// 获取歌曲详情
+export const getSongLyric = async (params: { id?: number }) => {
+  return await http.get<LyricRes>("/lyric", { params });
 };

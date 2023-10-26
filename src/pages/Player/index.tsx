@@ -1,16 +1,17 @@
 import SongListTable from "@/components/SongListTable";
-
 import { Modal, Toast } from "@douyinfe/semi-ui";
 import { usePrevious, useToggle } from "ahooks";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { shuffle } from "@/utils";
 import { ModeType, SongItem } from "@/types/player";
-import { getSongDetail, getSongUrl } from "@/http/api";
+import { getSongDetail, getSongLyric, getSongUrl } from "@/http/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalStorageState } from "ahooks";
 import PlayerInfo from "./components/PlayerInfo";
 import PlayerBar from "./components/PlayerBar";
 import { initialVal } from "@/constants/player";
+import Lyric, { HandlerFun } from "@/utils/lyric-parse";
+import "./index.scss";
 
 function Player() {
   const queryClient = useQueryClient();
@@ -27,6 +28,12 @@ function Player() {
   const [songList, setSongList] = useState<SongItem[]>([]); // 全量播放列表
   const [playSongList, setPlaySongList] = useState<SongItem[]>([]); // 实际播放列表
   const preVolume = usePrevious(volume);
+  // 歌词ref
+  const currentLyricRef = useRef<Lyric>();
+  // 当前实时歌词
+  const [currentPlayingLyric, setCurrentPlayingLyric] = useState("");
+  // 当前行数
+  const currentLineNum = useRef(0);
 
   const { isLoading } = useQuery(
     ["playerSongDetail", playIdList],
@@ -43,6 +50,29 @@ function Player() {
     }
   );
 
+  // 歌词解析的回调操作 实时获取歌词行数和当前歌词
+  const handleLyric: HandlerFun = ({ lineNum, txt }) => {
+    if (!currentLyricRef.current) return;
+    currentLineNum.current = lineNum;
+    // setCurrentPlayingLyric(txt);
+  };
+
+  const { isLoading: lyricLoading } = useQuery(["songLyricDetail", curPlayId], () => getSongLyric({ id: curPlayId }), {
+    select(data) {
+      return data.lrc?.lyric;
+    },
+    onSuccess(lyric) {
+      if (lyric) {
+        currentLyricRef.current = new Lyric(lyric, handleLyric);
+        // 调用歌词播放方法
+        currentLyricRef.current.play();
+        currentLineNum.current = 0;
+        currentLyricRef.current.seek(0);
+      }
+    },
+    enabled: !!curPlayId
+  });
+
   const songUrlMutation = useMutation(
     (id: string) => {
       return getSongUrl({ id });
@@ -58,6 +88,9 @@ function Player() {
               .current!.play()
               .then(() => {
                 setRight();
+                if (currentLyricRef.current) {
+                  currentLyricRef.current?.play();
+                }
               })
               .catch((e) => {
                 if (e.name === "NotAllowedError") {
@@ -67,6 +100,9 @@ function Player() {
                     onOk: () => {
                       audioRef.current!.play().then(() => {
                         setRight();
+                        if (currentLyricRef.current) {
+                          currentLyricRef.current?.play();
+                        }
                       });
                     },
                     cancelButtonProps: {
@@ -110,11 +146,22 @@ function Player() {
     return isNaN(playTime / duration) ? 0 : (Math.ceil(playTime) / Math.ceil(duration)) * 100;
   }, [playTime, duration]);
 
+  // 修改播放状态
+  const handleTogglePlayer = () => {
+    togglePlayer();
+    if (currentLyricRef.current) {
+      currentLyricRef.current.togglePlay(playTime * 1000);
+    }
+  };
+
   // 播放音乐
   const handlePlayer = (id: number) => {
     setPlayTime(0);
     setLeft();
     songUrlMutation.mutate(String(id));
+    if (currentLyricRef.current) {
+      currentLyricRef.current?.stop();
+    }
   };
 
   const handleError = () => {
@@ -135,6 +182,9 @@ function Player() {
       handleLoop();
     } else {
       setLeft();
+      if (currentLyricRef.current) {
+        currentLyricRef.current?.stop();
+      }
       handleNext();
     }
   };
@@ -202,21 +252,21 @@ function Player() {
   }, []);
 
   return (
-    <div className="w-heart--wrapper flex flex-col pb-24">
+    <div className="w-heart--wrapper player--wrapper flex flex-col pb-24">
       <div className="flex-1 px-32 flex justify-between">
         <SongListTable<SongItem>
           dataSource={songList}
           scroll={{ y: document.body.clientHeight - 240 }}
           onPlayClick={(item) => {
             if (curPlayId === item.id) {
-              togglePlayer();
+              handleTogglePlayer();
             } else {
               setCurPlayId(item.id!);
             }
           }}
           curPlayId={curPlayId}
           playing={playing}
-          onPauseClick={togglePlayer}
+          onPauseClick={handleTogglePlayer}
           tableLoading={isLoading && playIdList.length > 0}
           showDelete={true}
           onDeleteClick={async (obj) => {
@@ -243,13 +293,15 @@ function Player() {
           alName={al?.name}
           songName={name}
           picUrl={al?.picUrl}
+          lyricList={currentLyricRef.current?.lines}
+          currentLineNum={currentLineNum.current}
         />
       </div>
       {curPlayId && (
         <PlayerBar
           key={curPlayId}
           playId={curPlayId}
-          togglePlayer={togglePlayer}
+          togglePlayer={handleTogglePlayer}
           changeMode={changeMode}
           handleNext={handleNext}
           handlePrev={handlePrev}
@@ -268,6 +320,10 @@ function Player() {
             audioRef.current!.currentTime = newTime;
             if (!playing) {
               togglePlayer();
+            }
+            // 修改歌词进度
+            if (currentLyricRef.current) {
+              currentLyricRef.current.seek(newTime * 1000);
             }
           }}
         />
